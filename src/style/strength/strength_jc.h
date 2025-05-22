@@ -30,17 +30,17 @@ public:
   StrengthJohnsonCook(class MPM *, vector<string>);
   ~StrengthJohnsonCook() {};
 
-  float G();
+  double G();
 
   void write_restart(ofstream *);
   void read_restart(ifstream *);
 
   void update_deviatoric_stress(Solid &solid,
-                                Kokkos::View<float*> &plastic_strain_increment,
+                                Kokkos::View<double*> &plastic_strain_increment,
                                 Kokkos::View<Matrix3d*> &sigma_dev) const override;
 
 protected:
-  float G_, A, B, n, m, epsdot0, C, Tr, Tm, Tmr;
+  double G_, A, B, n, m, epsdot0, C, Tr, Tm, Tmr;
   string usage = "Usage: strength(strength-ID, johnson_cook, G, A, B, n, epsdot0, C, m, Tr, Tm)\n";
   int Nargs = 11;
 };

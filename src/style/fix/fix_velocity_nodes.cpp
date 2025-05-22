@@ -112,7 +112,7 @@ void FixVelocityNodes::reduce()
   Vector3d ftot_reduced;
 
   // Reduce ftot:
-  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_FLOAT, MPI_SUM,
+  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_DOUBLE, MPI_SUM,
                 universe->uworld);
 
   input->parsev(id + "_x", ftot_reduced[0]);
@@ -138,22 +138,22 @@ void FixVelocityNodes::post_update_grid_state(Grid &grid)
 
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
-  float dt = update->dt;
-  Kokkos::View<float**> mass = grid.mass;
+  double dt = update->dt;
+  Kokkos::View<double**> mass = grid.mass;
   Kokkos::View<int*> mask = grid.mask;
   Kokkos::View<Vector3d**> gv = grid.v, gv_update = grid.v_update;
 
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<float **> v_i = v[i]->registers;
-      Kokkos::View<float **> v_prev_i = v_prev[i]->registers;
+      Kokkos::View<double **> v_i = v[i]->registers;
+      Kokkos::View<double **> v_prev_i = v_prev[i]->registers;
 
       bool ileq = leq[i];
       bool igeq = geq[i];
 
       Kokkos::parallel_reduce("FixVelocityNodes::post_update_grid_state", grid.nnodes_local + grid.nnodes_ghost,
-                              KOKKOS_LAMBDA(const int &in, float &ftot_i)
+                              KOKKOS_LAMBDA(const int &in, double &ftot_i)
       {
         if (!(mask[in] & groupbit))
           return;
@@ -192,7 +192,7 @@ void FixVelocityNodes::post_velocities_to_grid(Grid &grid) {
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<float **> v_i = v[i]->registers;
+      Kokkos::View<double **> v_i = v[i]->registers;
 
       bool ileq = leq[i];
       bool igeq = geq[i];

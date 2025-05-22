@@ -240,19 +240,19 @@ int Group::find_unused()
   return -1;
 }
 
-float Group::xcm(int igroup, int dir)
+double Group::xcm(int igroup, int dir)
 {
   bool particles = pon[igroup] == "particles" ? true : false;
 
   if (!particles)
     error->all(FLERR, "xcm does not support nodes!\n");
 
-  float com, mass_tot;
+  double com, mass_tot;
 
   for (Solid *solid: domain->solids) {
 
     Kokkos::View<Vector3d*> x = solid->x;
-    Kokkos::View<float*> mass = solid->mass;
+    Kokkos::View<double*> mass = solid->mass;
     Kokkos::View<int*> mask   = solid->mask;
 
     const int &nmax           = solid->np_local;
@@ -260,7 +260,7 @@ float Group::xcm(int igroup, int dir)
     int groupbit = group->bitmask[igroup];
 
     Kokkos::parallel_reduce("compute_group_centre_of_mass", nmax,
-    KOKKOS_LAMBDA(const int &ip, float &lcom, float &lmass_tot)
+    KOKKOS_LAMBDA(const int &ip, double &lcom, double &lmass_tot)
     {
       if (mask[ip] & groupbit) {
 	lcom += x[ip][dir] * mass[ip];
@@ -269,22 +269,22 @@ float Group::xcm(int igroup, int dir)
     }, com, mass_tot);
   }
 
-  float com_reduced,  mass_tot_reduced;
+  double com_reduced,  mass_tot_reduced;
 
-  MPI_Allreduce(&com,&com_reduced,1,MPI_FLOAT,MPI_SUM,universe->uworld);
-  MPI_Allreduce(&mass_tot,&mass_tot_reduced,1,MPI_FLOAT,MPI_SUM,universe->uworld);
+  MPI_Allreduce(&com,&com_reduced,1,MPI_DOUBLE,MPI_SUM,universe->uworld);
+  MPI_Allreduce(&mass_tot,&mass_tot_reduced,1,MPI_DOUBLE,MPI_SUM,universe->uworld);
 
   if (mass_tot_reduced) return com_reduced/mass_tot_reduced;
   else return 0;
 }
 
-float Group::internal_force(int igroup, int dir)
+double Group::internal_force(int igroup, int dir)
 {
   bool particles = pon[igroup] == "particles" ? true : false;
 
   if (!particles)
     error->all(FLERR, "internal_force does not support nodes!\n");
-  float resulting_force;
+  double resulting_force;
 
   for (Solid *solid: domain->solids) {
 
@@ -296,7 +296,7 @@ float Group::internal_force(int igroup, int dir)
     int groupbit = group->bitmask[igroup];
 
     Kokkos::parallel_reduce("compute_group_internal_force", nmax,
-    KOKKOS_LAMBDA(const int &ip, float &lresulting_force)
+    KOKKOS_LAMBDA(const int &ip, double &lresulting_force)
     {
       if (mask[ip] & groupbit) {
 	lresulting_force += f[ip][dir];
@@ -304,14 +304,14 @@ float Group::internal_force(int igroup, int dir)
     }, resulting_force);
   }
 
-  float resulting_force_reduced;
+  double resulting_force_reduced;
 
-  MPI_Allreduce(&resulting_force,&resulting_force_reduced,1,MPI_FLOAT,MPI_SUM,universe->uworld);
+  MPI_Allreduce(&resulting_force,&resulting_force_reduced,1,MPI_DOUBLE,MPI_SUM,universe->uworld);
 
   return resulting_force_reduced;
 }
 
-float Group::external_force(int igroup, int dir)
+double Group::external_force(int igroup, int dir)
 {
   if (pon[igroup] == "nodes")
     {
@@ -319,12 +319,12 @@ float Group::external_force(int igroup, int dir)
 		 + names[igroup] + ".\n");
     }
 
-  float resulting_force;
+  double resulting_force;
 
   for (Solid *solid: domain->solids) {
 
     Kokkos::View<Vector3d*> mbp = solid->mbp;
-    Kokkos::View<float*> mass   = solid->mass;
+    Kokkos::View<double*> mass   = solid->mass;
     Kokkos::View<int*> mask     = solid->mask;
 
     const int &nmax           = solid->np_local;
@@ -333,7 +333,7 @@ float Group::external_force(int igroup, int dir)
 
 
     Kokkos::parallel_reduce("compute_group_external_force", nmax,
-    KOKKOS_LAMBDA(const int &ip, float &lresulting_force)
+    KOKKOS_LAMBDA(const int &ip, double &lresulting_force)
     {
       if (mask[ip] & groupbit) {
 	lresulting_force += mbp[ip][dir]/mass[ip];
@@ -341,9 +341,9 @@ float Group::external_force(int igroup, int dir)
     }, resulting_force);
   }
 
-  float resulting_force_reduced;
+  double resulting_force_reduced;
 
-  MPI_Allreduce(&resulting_force, &resulting_force_reduced, 1, MPI_FLOAT, MPI_SUM, universe->uworld);
+  MPI_Allreduce(&resulting_force, &resulting_force_reduced, 1, MPI_DOUBLE, MPI_SUM, universe->uworld);
 
   return resulting_force;
 }

@@ -34,12 +34,12 @@ public:
   void read_restart(ifstream *);
 
   void compute_damage(Solid &solid,
-                      Kokkos::View<float*> &pH,
+                      Kokkos::View<double*> &pH,
                       Kokkos::View<Matrix3d*> &sigma_dev,
-                      Kokkos::View<float*> &plastic_strain_increment) const override;
+                      Kokkos::View<double*> &plastic_strain_increment) const override;
 
 protected:
-  float d1, d2, d3, d4, d5, epsdot0, Tr, Tm, Tmr;
+  double d1, d2, d3, d4, d5, epsdot0, Tr, Tm, Tmr;
   string usage = "Usage: damage(damage-ID, damage_johnson_cook, d1, d2, d3, d4, d5, epsdot0, Tr, Tm)\n";
   int Nargs = 10;
 };

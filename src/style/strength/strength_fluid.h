@@ -19,17 +19,17 @@ public:
   StrengthFluid(class MPM *, vector<string>);
   ~StrengthFluid() {};
 
-  float G();
+  double G();
 
   void write_restart(ofstream *);
   void read_restart(ifstream *);
 
   void update_deviatoric_stress(Solid &solid,
-                                Kokkos::View<float*> &plastic_strain_increment,
+                                Kokkos::View<double*> &plastic_strain_increment,
                                 Kokkos::View<Matrix3d*> &sigma_dev) const override;
   
 protected:
-  float G_;
+  double G_;
 };
 
 #endif

@@ -20,8 +20,8 @@ namespace Kokkos
 {
   namespace Experimental
   {
-    KOKKOS_INLINE_FUNCTION float
-    copysign(float mag, float sign)
+    KOKKOS_INLINE_FUNCTION double
+    copysign(double mag, double sign)
     {
       return sign == 0? 0:
              sign >  0?  Kokkos::abs(mag):
@@ -32,20 +32,20 @@ namespace Kokkos
 
 namespace BasisFunction
 { 
-  KOKKOS_INLINE_FUNCTION float
-  linear(float r)
+  KOKKOS_INLINE_FUNCTION double
+  linear(double r)
   {
     return r >= 1 || r <= -1? 0: 1 - Kokkos::abs(r);
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  derivative_linear(float r, float inv_cellsize)
+  KOKKOS_INLINE_FUNCTION double
+  derivative_linear(double r, double inv_cellsize)
   {
     return r >= 1 || r <= -1 || r == 0? 0: -Kokkos::copysign(inv_cellsize, r);
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  cubic_spline(float r, int ntype)
+  KOKKOS_INLINE_FUNCTION double
+  cubic_spline(double r, int ntype)
   {
     if (r >= 1 && r < 2)
       return ntype == 1? 0: ((-r/6 + 1)*r - 2)*r + 4.0/3;
@@ -66,8 +66,8 @@ namespace BasisFunction
     return 0;
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  derivative_cubic_spline(float r, int ntype, float inv_cellsize)
+  KOKKOS_INLINE_FUNCTION double
+  derivative_cubic_spline(double r, int ntype, double inv_cellsize)
   {
     if (r >= 1 && r < 2)
       return ntype == 1? 0 : inv_cellsize*((-0.5*r + 2)*r - 2);
@@ -88,8 +88,8 @@ namespace BasisFunction
     return 0;
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  bernstein_quadratic(float r, int ntype)
+  KOKKOS_INLINE_FUNCTION double
+  bernstein_quadratic(double r, int ntype)
   {
     if (r >= 1.0 || r <= -1.0)
       return 0;
@@ -101,8 +101,8 @@ namespace BasisFunction
     return (1 - r)*(1-r);
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  derivative_bernstein_quadratic(float r, int ntype, float inv_cellsize)
+  KOKKOS_INLINE_FUNCTION double
+  derivative_bernstein_quadratic(double r, int ntype, double inv_cellsize)
   {
     if (r >= 1 || r <= -1)
       return 0;
@@ -113,8 +113,8 @@ namespace BasisFunction
 	  return 2*(r - Kokkos::copysign(1, r))*inv_cellsize;
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  quadratic_spline(float r, int ntype)
+  KOKKOS_INLINE_FUNCTION double
+  quadratic_spline(double r, int ntype)
   {
     switch (ntype)
     {
@@ -148,8 +148,8 @@ namespace BasisFunction
     }
   }
 
-  KOKKOS_INLINE_FUNCTION float
-  derivative_quadratic_spline(float r, int ntype, float inv_cellsize)
+  KOKKOS_INLINE_FUNCTION double
+  derivative_quadratic_spline(double r, int ntype, double inv_cellsize)
   {
     switch (ntype)
     {

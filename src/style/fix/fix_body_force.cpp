@@ -98,7 +98,7 @@ void FixBodyForce::prepare()
 void FixBodyForce::reduce()
 {
   Vector3d ftot_reduced;
-  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_FLOAT, MPI_SUM, universe->uworld);
+  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_DOUBLE, MPI_SUM, universe->uworld);
 }
 
 void FixBodyForce::post_particles_to_grid(Grid &grid)
@@ -112,17 +112,17 @@ void FixBodyForce::post_particles_to_grid(Grid &grid)
 
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
-  Kokkos::View<float**> mass = grid.mass;
+  Kokkos::View<double**> mass = grid.mass;
   Kokkos::View<int*> mask = grid.mask;
   Kokkos::View<Vector3d**> mb = grid.mb;
 
   for (int i = 0; i < 3; i++)
     if (fb[i])
     {
-      Kokkos::View<float **> fb_i = fb[i]->registers;
+      Kokkos::View<double **> fb_i = fb[i]->registers;
 
       Kokkos::parallel_reduce("FixBodyForce::post_particles_to_grid", grid.nnodes_local + grid.nnodes_ghost,
-                              KOKKOS_LAMBDA(const int &in, float &ftot_i)
+                              KOKKOS_LAMBDA(const int &in, double &ftot_i)
       {
 	if (!mass(solid_gpos, in) || !(mask[in] & groupbit))
           return;

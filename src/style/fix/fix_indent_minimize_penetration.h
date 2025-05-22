@@ -45,9 +45,9 @@ private:
                  "vy_center, vz_center, mu)\n";
   int Nargs = 12;
   Expression *xvalue, *yvalue, *zvalue, *vxvalue, *vyvalue, *vzvalue;
-  float R;  //< Sphere radius
-  float mu; //< Friction coefficient
-  float A;  //< Contact area?
+  double R;  //< Sphere radius
+  double mu; //< Friction coefficient
+  double A;  //< Contact area?
   Vector3d ftot;
 };
 

@@ -41,7 +41,7 @@ Var RunTime::command(vector<string> args)
 
   update->scheme->setup();
 
-  float maxtime = (float) input->parsev(args[0]) + update->atime;
+  double maxtime = (double) input->parsev(args[0]) + update->atime;
   update->nsteps = INT_MAX;
   update->maxtime = maxtime;
   update->firststep = update->ntimestep;

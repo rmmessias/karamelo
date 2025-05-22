@@ -44,7 +44,7 @@ private:
 
   Expression *xs[3];                     //< Position of a point on the surface
   Expression *normal[3];                 //< Normal to the plane pointing outwards
-  float K;                               //< Contact stiffness
+  double K;                               //< Contact stiffness
   Vector3d ftot;
 };
 

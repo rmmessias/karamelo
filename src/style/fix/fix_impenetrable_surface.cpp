@@ -88,7 +88,7 @@ void FixImpenetrableSurface::reduce()
   Vector3d ftot_reduced;
 
   // Reduce ftot:
-  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_FLOAT, MPI_SUM,
+  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_DOUBLE, MPI_SUM,
                 universe->uworld);
 
   // (*input->vars)[id + "_x"] = Var(id + "_x", ftot_reduced[0]);
@@ -110,31 +110,31 @@ void FixImpenetrableSurface::initial_integrate(Solid &solid) {
       normal[i]->evaluate(solid);
   }
 
-  float K = this->K;
+  double K = this->K;
   int groupbit = this->groupbit;
   Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<float*> smass = solid.mass;
-  Kokkos::View<float*> svol = solid.vol;
+  Kokkos::View<double*> smass = solid.mass;
+  Kokkos::View<double*> svol = solid.vol;
   Kokkos::View<Vector3d*> sx = solid.x;
   Kokkos::View<Vector3d*> smbp = solid.mbp;
-  Kokkos::View<float*> sdamage = solid.damage;
+  Kokkos::View<double*> sdamage = solid.damage;
 
-  float G = solid.mat->G;
+  double G = solid.mat->G;
 
-  Kokkos::View<float **> xs0_i = xs[0]->registers;
-  Kokkos::View<float **> xs1_i = xs[1]->registers;
-  Kokkos::View<float **> xs2_i = xs[2]->registers;
+  Kokkos::View<double **> xs0_i = xs[0]->registers;
+  Kokkos::View<double **> xs1_i = xs[1]->registers;
+  Kokkos::View<double **> xs2_i = xs[2]->registers;
 
-  Kokkos::View<float **> normal0_i = normal[0]->registers;
-  Kokkos::View<float **> normal1_i = normal[1]->registers;
-  Kokkos::View<float **> normal2_i = normal[2]->registers;
+  Kokkos::View<double **> normal0_i = normal[0]->registers;
+  Kokkos::View<double **> normal1_i = normal[1]->registers;
+  Kokkos::View<double **> normal2_i = normal[2]->registers;
 
-  float ftot_0, ftot_1, ftot_2;
+  double ftot_0, ftot_1, ftot_2;
 
   int dimension = domain->dimension;
 
   Kokkos::parallel_reduce("FixImpenetrableSurface::initial_integrate", solid.np_local,
-  KOKKOS_LAMBDA(const int &ip, float &lftot_0, float &lftot_1, float &lftot_2)
+  KOKKOS_LAMBDA(const int &ip, double &lftot_0, double &lftot_1, double &lftot_2)
   {
     if (!smass[ip] || !(mask[ip] & groupbit))
       return;
@@ -143,12 +143,12 @@ void FixImpenetrableSurface::initial_integrate(Solid &solid) {
     Vector3d normal_ = Vector3d(normal0_i(0, ip), normal1_i(0, ip), normal2_i(0, ip));
     normal_.normalize();
 
-    float p = normal_.dot(xs_ - sx[ip]);
+    double p = normal_.dot(xs_ - sx[ip]);
 
     if (p < 0)
       return;
 
-    float R;
+    double R;
     if (dimension == 1)
       R = svol[ip];
     else if (dimension == 2)
@@ -168,7 +168,7 @@ void FixImpenetrableSurface::initial_integrate(Solid &solid) {
 }
 
 void FixImpenetrableSurface::write_restart(ofstream *of) {
-  // of->write(reinterpret_cast<const char *>(&K), sizeof(float));
+  // of->write(reinterpret_cast<const char *>(&K), sizeof(double));
 
   // xs_x.write_to_restart(of);
   // xs_y.write_to_restart(of);
@@ -180,7 +180,7 @@ void FixImpenetrableSurface::write_restart(ofstream *of) {
 }
 
 void FixImpenetrableSurface::read_restart(ifstream *ifr) {
-  // ifr->read(reinterpret_cast<char *>(&K), sizeof(float));
+  // ifr->read(reinterpret_cast<char *>(&K), sizeof(double));
 
   // xs_x.read_from_restart(ifr);
   // xs_y.read_from_restart(ifr);

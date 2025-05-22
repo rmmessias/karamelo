@@ -65,10 +65,10 @@ void FixTemperatureNodes::post_update_grid_state(Grid &grid)
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
   Kokkos::View<int*> mask = grid.mask;
-  Kokkos::View<float**> T = grid.T, T_update = grid.T_update;
+  Kokkos::View<double**> T = grid.T, T_update = grid.T_update;
 
-  Kokkos::View<float **> Tv = Tvalue->registers;
-  Kokkos::View<float **> Tpv = Tprevvalue->registers;
+  Kokkos::View<double **> Tv = Tvalue->registers;
+  Kokkos::View<double **> Tpv = Tprevvalue->registers;
 
   Kokkos::parallel_for("FixTemperatureNodes::post_update_grid_state", grid.nnodes_local + grid.nnodes_ghost,
 		       KOKKOS_LAMBDA(const int &in)
@@ -89,9 +89,9 @@ void FixTemperatureNodes::post_velocities_to_grid(Grid &grid)
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
   Kokkos::View<int*> mask = grid.mask;
-  Kokkos::View<float**> T = grid.T;
+  Kokkos::View<double**> T = grid.T;
 
-  Kokkos::View<float **> Tv = Tvalue->registers;
+  Kokkos::View<double **> Tv = Tvalue->registers;
 
   Kokkos::parallel_for("FixTemperatureNodes::post_velocities_to_grid", grid.nnodes_local + grid.nnodes_ghost,
 		       KOKKOS_LAMBDA(const int &in)

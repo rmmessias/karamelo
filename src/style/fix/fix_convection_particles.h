@@ -40,8 +40,8 @@ private:
   string usage = "Usage: fix(fix-ID, convection_particles, group, h, Tinf)\n";
   const int Nargs = 5;
 
-  float h;                        //< Heat transfer coefficient.
-  float qtot;
+  double h;                        //< Heat transfer coefficient.
+  double qtot;
   Expression *Tinf;                //< Ambiant temperature.
 };
 

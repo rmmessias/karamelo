@@ -15,20 +15,20 @@ class Facet : public array<Vector3d, 3> {
     Vector3d edge0 = at(1) - at(0);
     Vector3d edge1 = at(2) - at(0);
     Vector3d h = direction.cross(edge1);
-    float a = edge0.dot(h);
+    double a = edge0.dot(h);
     if (abs(a) < eps)
       return false;    // This ray is parallel to this triangle.
-    float f = 1/a;
+    double f = 1/a;
     Vector3d s = origin - at(0);
-    float u = f*s.dot(h);
+    double u = f*s.dot(h);
     if (u < 0.0 || u > 1.0)
       return false;
     Vector3d q = s.cross(edge0);
-    float v = f*direction.dot(q);
+    double v = f*direction.dot(q);
     if (v < 0.0 || u + v > 1.0)
       return false;
     // At this stage we can compute t to find out where the intersection point is on the line.
-    float t = f*edge1.dot(q);
+    double t = f*edge1.dot(q);
     if (t > eps) // ray intersection
     {
       return true;

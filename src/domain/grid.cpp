@@ -43,13 +43,13 @@ Grid::Grid(MPM *mpm) :
   nsolids = 0;
 }
 
-void Grid::init(float *solidlo, float *solidhi) {
+void Grid::init(double *solidlo, double *solidhi) {
 
   bool linear = false;
   bool cubic = false;
   bool bernstein = false;
   bool quadratic = false;
-  float h = cellsize;
+  double h = cellsize;
 
   if (update->shape_function == Update::ShapeFunctions::LINEAR)
     linear = true;
@@ -62,10 +62,10 @@ void Grid::init(float *solidlo, float *solidhi) {
     h /= 2;
   }
 
-  float *sublo = domain->sublo;
-  float *subhi = domain->subhi;
+  double *sublo = domain->sublo;
+  double *subhi = domain->subhi;
 
-  float *boundlo, *boundhi;
+  double *boundlo, *boundhi;
   if (update->method->is_TL) {
     boundlo = solidlo;
     boundhi = solidhi;
@@ -74,10 +74,10 @@ void Grid::init(float *solidlo, float *solidhi) {
     boundhi = domain->boxhi;
   }
 
-  float Loffsetlo[3] = {MAX(0.0f, sublo[0] - boundlo[0]),
+  double Loffsetlo[3] = {MAX(0.0f, sublo[0] - boundlo[0]),
 			MAX(0.0f, sublo[1] - boundlo[1]),
 			MAX(0.0f, sublo[2] - boundlo[2])};
-  float Loffsethi_[3] = {MAX(0.0f, MIN(subhi[0], boundhi[0]) - boundlo[0]),
+  double Loffsethi_[3] = {MAX(0.0f, MIN(subhi[0], boundhi[0]) - boundlo[0]),
 			 MAX(0.0f, MIN(subhi[1], boundhi[1]) - boundlo[1]),
 			 MAX(0.0f, MIN(subhi[2], boundhi[2]) - boundlo[2])};
 
@@ -126,13 +126,13 @@ void Grid::init(float *solidlo, float *solidhi) {
   // cout << "2--- proc " << universe->me << " noffsetlo=[" << noffsetlo[0] << "," << noffsetlo[1] << "," << noffsetlo[2] << "]\n";
   // cout << "2--- proc " << universe->me << " noffsethi_=[" << noffsethi_[0] << "," << noffsethi_[1] << "," << noffsethi_[2] << "]\n";
 
-  float Lx_global = solidhi[0]-solidlo[0];//+2*cellsize;
+  double Lx_global = solidhi[0]-solidlo[0];//+2*cellsize;
 
   nx_global = ((int) (Lx_global/h))+1;
   while (nx_global*h <= Lx_global+0.5*h) nx_global++;
 
   if (domain->dimension >= 2) {
-    float Ly_global = solidhi[1]-solidlo[1];
+    double Ly_global = solidhi[1]-solidlo[1];
     ny_global = ((int) Ly_global/h)+1;
     while (ny_global*h <= Ly_global+0.5*h) ny_global++;
   } else {
@@ -140,7 +140,7 @@ void Grid::init(float *solidlo, float *solidhi) {
   }
 
   if (domain->dimension == 3) {
-    float Lz_global = solidhi[2]-solidlo[2];
+    double Lz_global = solidhi[2]-solidlo[2];
     nz_global = ((int) Lz_global/h)+1;
     while (nz_global*h <= Lz_global+0.5*h) nz_global++;
   } else {
@@ -202,7 +202,7 @@ void Grid::init(float *solidlo, float *solidhi) {
   vector<Point> ns;
   vector<Point> gnodes;
 
-  float delta;
+  double delta;
   if (cubic || quadratic || bernstein) delta = 2*h - 1.0e-12;
   else delta = h - 1.0e-12;
 
@@ -320,7 +320,7 @@ void Grid::init(float *solidlo, float *solidhi) {
   grow(nnodes_local + nnodes_ghost);
 
   int me = universe->me;
-  float boundlo_0   = boundlo[0],   boundlo_1   = boundlo[1],   boundlo_2   = boundlo[2];
+  double boundlo_0   = boundlo[0],   boundlo_1   = boundlo[1],   boundlo_2   = boundlo[2];
   int noffsetlo_0 = noffsetlo[0], noffsetlo_1 = noffsetlo[1], noffsetlo_2 = noffsetlo[2];
   int dimension = domain->dimension;
   int nx = this->nx, ny = this->ny, nz = this->nz;
@@ -432,9 +432,9 @@ void Grid::grow(int nn){
   mb       = Kokkos::View<Vector3d**>("mb",       ns, nn);
   f        = Kokkos::View<Vector3d**>("f",        ns, nn);
 
-  mass = Kokkos::View<float**>("mass", ns, nn);
+  mass = Kokkos::View<double**>("mass", ns, nn);
   if (update->method->anti_volumetric_locking)
-    vol = Kokkos::View<float**>("vol", ns, nn);
+    vol = Kokkos::View<double**>("vol", ns, nn);
   mask = Kokkos::View<int*>   ("mask", nn);
 
   Kokkos::View<int*> mask = this->mask;
@@ -447,10 +447,10 @@ void Grid::grow(int nn){
 
   ntype    = Kokkos::View<Vector3i*>("ntype",  nn);
   rigid    = Kokkos::View<bool**>   ("rigid",  ns, nn);
-  T        = Kokkos::View<float**>("T",        ns, nn);
-  T_update = Kokkos::View<float**>("T_update", ns, nn);
-  Qext     = Kokkos::View<float**>("Qext",     ns, nn);
-  Qint     = Kokkos::View<float**>("Qint",     ns, nn);
+  T        = Kokkos::View<double**>("T",        ns, nn);
+  T_update = Kokkos::View<double**>("T_update", ns, nn);
+  Qext     = Kokkos::View<double**>("Qext",     ns, nn);
+  Qint     = Kokkos::View<double**>("Qint",     ns, nn);
 
   normal   = Kokkos::View<Vector3d**>("normal", ns, nn);
 }

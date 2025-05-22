@@ -145,7 +145,7 @@ Block_::~Block_()
    inside = 0 if x,y,z is outside and not on surface
 ------------------------------------------------------------------------- */
 
-int Block_::inside(float x, float y, float z)
+int Block_::inside(double x, double y, double z)
 {
   //cout << "Check if point (" << x << ", " << y << ", " << z << ") is inside the region" << endl;
   if (x >= xlo && x <= xhi && y >= ylo && y <= yhi && z >= zlo && z <= zhi)
@@ -156,8 +156,8 @@ int Block_::inside(float x, float y, float z)
 /* ----------------------------------------------------------------------
    return a vector that contains the limits of the box
 ------------------------------------------------------------------------- */
-vector<float> Block_::limits(){
-  vector<float> lim;
+vector<double> Block_::limits(){
+  vector<double> lim;
   lim.push_back(xlo);
   lim.push_back(xhi);
   lim.push_back(ylo);
@@ -168,20 +168,20 @@ vector<float> Block_::limits(){
 }
 
 void Block_::write_restart(ofstream *of) {
-  of->write(reinterpret_cast<const char *>(&xlo), sizeof(float));
-  of->write(reinterpret_cast<const char *>(&xhi), sizeof(float));
-  of->write(reinterpret_cast<const char *>(&ylo), sizeof(float));
-  of->write(reinterpret_cast<const char *>(&yhi), sizeof(float));
-  of->write(reinterpret_cast<const char *>(&zlo), sizeof(float));
-  of->write(reinterpret_cast<const char *>(&zhi), sizeof(float));
+  of->write(reinterpret_cast<const char *>(&xlo), sizeof(double));
+  of->write(reinterpret_cast<const char *>(&xhi), sizeof(double));
+  of->write(reinterpret_cast<const char *>(&ylo), sizeof(double));
+  of->write(reinterpret_cast<const char *>(&yhi), sizeof(double));
+  of->write(reinterpret_cast<const char *>(&zlo), sizeof(double));
+  of->write(reinterpret_cast<const char *>(&zhi), sizeof(double));
 }
 
 
 void Block_::read_restart(ifstream *ifr) {
-  ifr->read(reinterpret_cast<char *>(&xlo), sizeof(float));
-  ifr->read(reinterpret_cast<char *>(&xhi), sizeof(float));
-  ifr->read(reinterpret_cast<char *>(&ylo), sizeof(float));
-  ifr->read(reinterpret_cast<char *>(&yhi), sizeof(float));
-  ifr->read(reinterpret_cast<char *>(&zlo), sizeof(float));
-  ifr->read(reinterpret_cast<char *>(&zhi), sizeof(float));
+  ifr->read(reinterpret_cast<char *>(&xlo), sizeof(double));
+  ifr->read(reinterpret_cast<char *>(&xhi), sizeof(double));
+  ifr->read(reinterpret_cast<char *>(&ylo), sizeof(double));
+  ifr->read(reinterpret_cast<char *>(&yhi), sizeof(double));
+  ifr->read(reinterpret_cast<char *>(&zlo), sizeof(double));
+  ifr->read(reinterpret_cast<char *>(&zhi), sizeof(double));
 }

@@ -31,7 +31,7 @@ public:
 
 private:
   int t;
-  float Xmax[3];
+  double Xmax[3];
 };
 
 #endif

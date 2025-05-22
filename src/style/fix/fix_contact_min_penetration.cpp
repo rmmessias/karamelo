@@ -65,7 +65,7 @@ void FixContactMinPenetration::reduce()
   Vector3d ftot_reduced;
 
   // Reduce ftot:
-  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_FLOAT, MPI_SUM,
+  MPI_Allreduce(ftot.elements, ftot_reduced.elements, 3, MPI_DOUBLE, MPI_SUM,
                 universe->uworld);
 
   (*input->vars)[id + "_x"] = Var(id + "_x", ftot_reduced[0]);
@@ -84,12 +84,12 @@ void FixContactMinPenetration::initial_integrate(Solid &solid)
       if (solid1 <= &solid)
         continue;
 
-      float Estar = 1/((1 - solid.  mat->nu*solid.  mat->nu)/solid.  mat->E +
+      double Estar = 1/((1 - solid.  mat->nu*solid.  mat->nu)/solid.  mat->E +
                         (1 - solid1->mat->nu*solid1->mat->nu)/solid1->mat->E);
 
-      float alpha = solid.mat->kappa/(solid.mat->kappa + solid1->mat->kappa);
+      double alpha = solid.mat->kappa/(solid.mat->kappa + solid1->mat->kappa);
 
-      float max_cellsize = MAX(solid.grid->cellsize, solid1->grid->cellsize);
+      double max_cellsize = MAX(solid.grid->cellsize, solid1->grid->cellsize);
     
       for (int ip1 = 0; ip1 < solid1->np_local; ip1++)
       {
@@ -105,7 +105,7 @@ void FixContactMinPenetration::initial_integrate(Solid &solid)
         if (outside)
           continue;
 
-        float Rp;
+        double Rp;
         if (domain->dimension == 2)
         {
           if (domain->axisymmetric)
@@ -125,13 +125,13 @@ void FixContactMinPenetration::initial_integrate(Solid &solid)
         if (outside)
           continue;
       
-        float r = dx.norm();
+        double r = dx.norm();
 
         // Finer screening:
         if (r >= Rp)
           continue;
 
-        float fmag = solid.mass[ip] * solid1->mass[ip1]/
+        double fmag = solid.mass[ip] * solid1->mass[ip1]/
                     ((solid.mass[ip] + solid1->mass[ip1])*
                      update->dt*update->dt)*(1 - Rp/r);
         Vector3d f = fmag*dx;
@@ -140,16 +140,16 @@ void FixContactMinPenetration::initial_integrate(Solid &solid)
         {
           const Vector3d &dv = solid1->v[ip1] - solid.v[ip];
           Vector3d vt = dv - dv.dot(dx)/r/r*dx;
-          float vtnorm = vt.norm();
+          double vtnorm = vt.norm();
           if (vtnorm != 0)
           {
             vt /= vtnorm;
-            float ffric = mu*fmag*r;
+            double ffric = mu*fmag*r;
             f -= ffric*vt;
 
             if (update->method->temp)
             {
-              float gamma = ffric*vtnorm*update->dt;
+              double gamma = ffric*vtnorm*update->dt;
               solid.gamma[ip] += alpha*solid.vol0[ip]*solid.mat->invcp*gamma;
               solid1->gamma[ip1] += (1 - alpha)*solid1->vol0[ip1]*solid1->mat->invcp*gamma;
             }
@@ -165,10 +165,10 @@ void FixContactMinPenetration::initial_integrate(Solid &solid)
 
 void FixContactMinPenetration::write_restart(ofstream *of)
 {
-  of->write(reinterpret_cast<const char *>(&mu), sizeof(float));
+  of->write(reinterpret_cast<const char *>(&mu), sizeof(double));
 }
 
 void FixContactMinPenetration::read_restart(ifstream *ifr)
 {
-  ifr->read(reinterpret_cast<char *>(&mu), sizeof(float));
+  ifr->read(reinterpret_cast<char *>(&mu), sizeof(double));
 }

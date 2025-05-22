@@ -41,11 +41,11 @@ public:
   int find(string);            ///< Return group index
   int find_unused();           ///< Return index of first available group
 
-  float xcm(int, int);        ///< Determine the centre of mass of a group
-  float internal_force(
+  double xcm(int, int);        ///< Determine the centre of mass of a group
+  double internal_force(
       int,
       int);                    ///< Determine the resulting internal force applied onto the group
-  float external_force(
+  double external_force(
       int,
       int);                    ///< Determine the resulting internal force applied onto the group
 

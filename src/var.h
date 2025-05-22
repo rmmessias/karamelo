@@ -23,12 +23,12 @@ class Var{
  public:
   // functions
   Var() {};
-  Var(float);
-  Var(string, float, bool c = false);
+  Var(double);
+  Var(string, double, bool c = false);
 
   void evaluate(class MPM * = nullptr);
-  float result(class MPM *mpm, bool only_position_changed = false);
-  float result() const {return value;};
+  double result(class MPM *mpm, bool only_position_changed = false);
+  double result() const {return value;};
   string str() const;
   string eq() const {return equation;};
   bool is_constant() const {return constant;};
@@ -48,14 +48,14 @@ class Var{
   Var operator!();
   //Var operator=(const Var&);
   operator int() {return (int) value;};
-  operator float() {return value;};
+  operator double() {return value;};
 
   void write_to_restart(ofstream *);
   void read_from_restart(ifstream *);
 
 protected:
   string equation;             // formula
-  float value;                // current value
+  double value;                // current value
   bool constant;               // is the variables constant?
   bool position_independent = false;
 };

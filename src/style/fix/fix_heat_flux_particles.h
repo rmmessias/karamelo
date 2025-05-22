@@ -41,7 +41,7 @@ private:
   const int Nargs = 4;
 
   Expression *q;                  //< Flux
-  float qtot;
+  double qtot;
 };
 
 #endif

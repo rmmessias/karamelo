@@ -38,10 +38,10 @@ public:
 private:
   string usage = "Usage: fix(fix-ID, contact/minimize_penetration/plane, solid, x, y, z, nx, ny, nz, mu)\n";
   int Nargs = 10;
-  float D; // Coordinates of the plane.
+  double D; // Coordinates of the plane.
   Vector3d xq; // Point in the plane.
   Vector3d n;  // Normal to the plane.
-  float mu;          // Friction coefficient.
+  double mu;          // Friction coefficient.
   Vector3d ftot;
 };
 

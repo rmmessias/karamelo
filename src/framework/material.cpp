@@ -280,7 +280,7 @@ void Material::add_material(vector<string> args) {
     else
       type = NEO_HOOKEAN;
 
-    float kappa = 0, cp = 0, alpha = 0;
+    double kappa = 0, cp = 0, alpha = 0;
     if (args.size() >= 7) {
       cp = input->parsev(args[5]);
       kappa = input->parsev(args[6]);
@@ -486,12 +486,12 @@ void Material::write_restart(ofstream *of) {
       }
       of->write(reinterpret_cast<const char *>(&iTemperature), sizeof(int));
     } else if (materials[i].type == LINEAR || materials[i].type == NEO_HOOKEAN) {
-      of->write(reinterpret_cast<const char *>(&materials[i].rho0), sizeof(float));
-      of->write(reinterpret_cast<const char *>(&materials[i].E), sizeof(float));
-      of->write(reinterpret_cast<const char *>(&materials[i].nu), sizeof(float));
-      of->write(reinterpret_cast<const char *>(&materials[i].cp), sizeof(float));
-      of->write(reinterpret_cast<const char *>(&materials[i].kappa), sizeof(float));
-      of->write(reinterpret_cast<const char *>(&materials[i].alpha), sizeof(float));
+      of->write(reinterpret_cast<const char *>(&materials[i].rho0), sizeof(double));
+      of->write(reinterpret_cast<const char *>(&materials[i].E), sizeof(double));
+      of->write(reinterpret_cast<const char *>(&materials[i].nu), sizeof(double));
+      of->write(reinterpret_cast<const char *>(&materials[i].cp), sizeof(double));
+      of->write(reinterpret_cast<const char *>(&materials[i].kappa), sizeof(double));
+      of->write(reinterpret_cast<const char *>(&materials[i].alpha), sizeof(double));
     }
   }
 
@@ -652,18 +652,18 @@ void Material::read_restart(ifstream *ifr) {
       materials.push_back(
           Mat{id, SHOCK, EOSs[iEOS], strengths[iStrength], damage_, temp_});
     } else if (type == LINEAR || type == NEO_HOOKEAN) {
-      float rho0, E, nu, cp, kappa, alpha = 0;
-      ifr->read(reinterpret_cast<char *>(&rho0), sizeof(float));
-      ifr->read(reinterpret_cast<char *>(&E), sizeof(float));
-      ifr->read(reinterpret_cast<char *>(&nu), sizeof(float));
-      ifr->read(reinterpret_cast<char *>(&cp), sizeof(float));
-      ifr->read(reinterpret_cast<char *>(&kappa), sizeof(float));
-      ifr->read(reinterpret_cast<char *>(&alpha), sizeof(float));
+      double rho0, E, nu, cp, kappa, alpha = 0;
+      ifr->read(reinterpret_cast<char *>(&rho0), sizeof(double));
+      ifr->read(reinterpret_cast<char *>(&E), sizeof(double));
+      ifr->read(reinterpret_cast<char *>(&nu), sizeof(double));
+      ifr->read(reinterpret_cast<char *>(&cp), sizeof(double));
+      ifr->read(reinterpret_cast<char *>(&kappa), sizeof(double));
+      ifr->read(reinterpret_cast<char *>(&alpha), sizeof(double));
 
       materials.push_back(Mat{id, type, rho0, E, nu, cp, kappa, alpha});
     } else if (type == RIGID) {
-      float rho0;
-      ifr->read(reinterpret_cast<char *>(&rho0), sizeof(float));
+      double rho0;
+      ifr->read(reinterpret_cast<char *>(&rho0), sizeof(double));
       materials.push_back(Mat{id, RIGID, rho0});
     } else {
       error->one(FLERR, "Error: unkown material type" + to_string(type) + ".\n");
@@ -754,7 +754,7 @@ Mat::Mat(string id_, int type_, class EOS* eos_, class Strength* strength_, clas
 /*! The arguments are: material ID, material type (see Material::constitutive_model)
  * the density in the reference state, the Young's modulus and Poisson's ratio.
  */
-Mat::Mat(string id_, int type_, float rho0_, float E_, float nu_, float cp_, float kappa_, float alpha_) {
+Mat::Mat(string id_, int type_, double rho0_, double E_, double nu_, double cp_, double kappa_, double alpha_) {
   id = id_;
   type = type_;
   eos = nullptr;
@@ -779,7 +779,7 @@ Mat::Mat(string id_, int type_, float rho0_, float E_, float nu_, float cp_, flo
 
 /*! The arguments are: material ID, material type (see Material::constitutive_model)
  */
-Mat::Mat(string id_, int type_, float rho0_) {
+Mat::Mat(string id_, int type_, double rho0_) {
   type = type_;
   id = id_;
   rigid = true;

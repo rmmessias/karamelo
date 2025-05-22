@@ -22,7 +22,7 @@
 #include <var.h>
 #include <error.h>
 
-enum{INT,FLOAT,BIGINT};
+enum{INT,DOUBLE,BIGINT};
 
 Plot::Plot(MPM *mpm, vector<string> args) : Pointers(mpm)
 {
@@ -62,12 +62,12 @@ void Plot::parse_keywords(vector<string> keyword)
     }
 
     if (keyword[i].compare("step")==0)      addfield("Step", &Plot::compute_step, BIGINT, x_or_y);
-    else if (keyword[i].compare("dt")==0)   addfield("dt", &Plot::compute_dt, FLOAT, x_or_y);
-    else if (keyword[i].compare("time")==0) addfield("Time", &Plot::compute_time, FLOAT, x_or_y);
+    else if (keyword[i].compare("dt")==0)   addfield("dt", &Plot::compute_dt, DOUBLE, x_or_y);
+    else if (keyword[i].compare("time")==0) addfield("Time", &Plot::compute_time, DOUBLE, x_or_y);
     else {
       try {
 	//(*input->vars).at(keyword[i]);
-	addfield(keyword[i], &Plot::compute_var, FLOAT, x_or_y);
+	addfield(keyword[i], &Plot::compute_var, DOUBLE, x_or_y);
       }
       catch (const std::out_of_range&) {
 	error->all(FLERR, "Error: unknown plot keyword " + keyword[i] + ".\n");

@@ -49,8 +49,8 @@ public:
   ~Input();
   void file();                 ///< Reads the input file line by line and pass it to parsev().
   Var parsev(string);          ///< Parse an input text line.
-  Expression &parsev(const string &, float);
-  float parse(string);        ///< Deprecated function
+  Expression &parsev(const string &, double);
+  double parse(string);        ///< Deprecated function
 
 
 private:
@@ -62,7 +62,7 @@ private:
   int maxarg;                  ///< max number of args in arg
 
   int numtriple(char *);                     ///< Counts the number of triple quotes
-  float precedence(const string);           ///< Finds precedence of operators.
+  double precedence(const string);           ///< Finds precedence of operators.
   Var applyOp(Var, const string, Var);       ///< Performs arithmetic operations.
   bool is_operator(char);                    ///< Checks if op is an operator. Return true or false.
   bool is_math_char(char);                   ///< Checks if the character is either of +-/*()

@@ -62,7 +62,7 @@ class MPM {
   Group *group;            ///< groups of particles
 
   MPI_Comm world;                ///< MPI communicator
-  float initclock;              ///< wall clock at instantiation
+  double initclock;              ///< wall clock at instantiation
 
   filebuf infile;                ///< input file
   //filebuf logfile;               ///< logfile

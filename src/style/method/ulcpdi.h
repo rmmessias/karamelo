@@ -28,7 +28,7 @@
 //
 //class ULCPDI : public Method {
 // public:
-//  float FLIP;
+//  double FLIP;
 //  string shape_function;
 //
 //  ULCPDI(class MPM *);
@@ -37,8 +37,8 @@
 //  void setup(vector<string>);
 //
 //  void compute_grid_weight_functions_and_gradients();
-//  float (*basis_function)(float, int);
-//  float (*derivative_basis_function)(float, int, float);
+//  double (*basis_function)(double, int);
+//  double (*derivative_basis_function)(double, int, double);
 //  void particles_to_grid();
 //  void particles_to_grid_USF_1();
 //  void particles_to_grid_USF_2();
@@ -59,12 +59,12 @@
 //  string known_styles[2] = {"R4", "Q4"};
 //};
 //
-//// float linear_basis_function(float, int);
-//// float derivative_linear_basis_function(float, int, float);
-//// float cubic_spline_basis_function(float, int);
-//// float derivative_cubic_spline_basis_function(float, int, float);
-//// float bernstein_quadratic_basis_function(float, int);
-//// float derivative_bernstein_quadratic_basis_function(float, int, float);
+//// double linear_basis_function(double, int);
+//// double derivative_linear_basis_function(double, int, double);
+//// double cubic_spline_basis_function(double, int);
+//// double derivative_cubic_spline_basis_function(double, int, double);
+//// double bernstein_quadratic_basis_function(double, int);
+//// double derivative_bernstein_quadratic_basis_function(double, int, double);
 //
 //
 //#endif

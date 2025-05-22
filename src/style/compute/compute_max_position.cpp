@@ -65,8 +65,8 @@ void ComputeMaxPosition::compute_value(Solid &solid) {
     Xmax[0] = Xmax[1] = Xmax[2] = 0;
   }
 
-  float Xmax_reduced[3] = {0., 0., 0.};
-  float Xmax_tmp[3] = {0., 0., 0.};
+  double Xmax_reduced[3] = {0., 0., 0.};
+  double Xmax_tmp[3] = {0., 0., 0.};
   Kokkos::View<Vector3d*> sx = solid.x;
   Kokkos::View<int*> mask = solid.mask;
 
@@ -75,7 +75,7 @@ void ComputeMaxPosition::compute_value(Solid &solid) {
   if (update->ntimestep == output->next ||
       update->ntimestep == update->nsteps) {
     Kokkos::parallel_reduce("ComputeMaxPosition::compute_value", solid.np_local,
-    KOKKOS_LAMBDA(const int &ip, float &lXmax0, float &lXmax1, float &lXmax2)
+    KOKKOS_LAMBDA(const int &ip, double &lXmax0, double &lXmax1, double &lXmax2)
     {
       if (mask[ip] & groupbit) {
 	const Vector3d &x = sx[ip];
@@ -83,16 +83,16 @@ void ComputeMaxPosition::compute_value(Solid &solid) {
 	lXmax1 = lXmax1 > x[1] ? lXmax1 : x[1];
 	lXmax2 = lXmax2 > x[2] ? lXmax2 : x[2];
       }
-    },Kokkos::Max<float>(Xmax_tmp[0]),
-      Kokkos::Max<float>(Xmax_tmp[1]),
-      Kokkos::Max<float>(Xmax_tmp[2]));
+    },Kokkos::Max<double>(Xmax_tmp[0]),
+      Kokkos::Max<double>(Xmax_tmp[1]),
+      Kokkos::Max<double>(Xmax_tmp[2]));
 
     for (int i = 0; i < domain->dimension; i++)
       Xmax[i] = max(Xmax[i], Xmax_tmp[i]);
   }
 
   // Reduce:
-  MPI_Allreduce(Xmax, Xmax_reduced, 3, MPI_FLOAT, MPI_MAX, universe->uworld);
+  MPI_Allreduce(Xmax, Xmax_reduced, 3, MPI_DOUBLE, MPI_MAX, universe->uworld);
   input->parsev(id + "_x", Xmax_reduced[0]);
   input->parsev(id + "_y", Xmax_reduced[1]);
   input->parsev(id + "_z", Xmax_reduced[2]);

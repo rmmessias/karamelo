@@ -98,7 +98,7 @@ DumpGridBin::~DumpGridBin() {
 void DumpGridBin::write() {
 
   int ithread;
-  pair<thread, vector<float>> *th = nullptr;
+  pair<thread, vector<double>> *th = nullptr;
 
   for (int i=0; i<threads.size(); i++) {
     if (threads[i].second.empty()) {
@@ -115,7 +115,7 @@ void DumpGridBin::write() {
     th = &threads.back();
   }
 
-  vector<float> &buf = th->second;
+  vector<double> &buf = th->second;
 
   // Open dump file:
   size_t pos_asterisk = filename.find('*');
@@ -293,12 +293,12 @@ void DumpGridBin::write_to_file(bigint i, string fdump, bigint total_nn, bigint 
   for(int i=0; i<6; i++)
     dumpstream.write(reinterpret_cast<const char *>(&one),sizeof(int)); // Boundary types
 
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[0]),sizeof(float));
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[0]),sizeof(float));
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[1]),sizeof(float));
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[1]),sizeof(float));
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[2]),sizeof(float));
-  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[2]),sizeof(float));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[0]),sizeof(double));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[0]),sizeof(double));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[1]),sizeof(double));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[1]),sizeof(double));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxlo[2]),sizeof(double));
+  dumpstream.write(reinterpret_cast<const char *>(&domain->boxhi[2]),sizeof(double));
   int size_one = output_var.size() + 2;
   dumpstream.write(reinterpret_cast<const char *>(&size_one),sizeof(int));
 
@@ -327,8 +327,8 @@ void DumpGridBin::write_to_file(bigint i, string fdump, bigint total_nn, bigint 
   int nme = (int) (total_nn * size_one); // # of dump lines this proc contributes to dump (nn->local since each cpu creates its own dump.
   dumpstream.write(reinterpret_cast<const char *>(&nme),sizeof(int));
 
-  vector<float> &buf = threads[i].second;
-  dumpstream.write(reinterpret_cast<const char *>(&buf[0]),buf.size()*sizeof(float));
+  vector<double> &buf = threads[i].second;
+  dumpstream.write(reinterpret_cast<const char *>(&buf[0]),buf.size()*sizeof(double));
 
   dumpstream.close();
 

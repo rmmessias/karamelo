@@ -56,15 +56,15 @@ class Cylinder : public Region {
 public:
   Cylinder(class MPM *, vector<string>);
   ~Cylinder();
-  int inside(float, float, float);
-  vector<float> limits();
+  int inside(double, double, double);
+  vector<double> limits();
   void write_restart(ofstream *);
   void read_restart(ifstream *);
 
 protected:
-  float c1, c2, R, RSq, lo, hi;
+  double c1, c2, R, RSq, lo, hi;
   char axis;
-  float xlo, xhi, ylo, yhi, zlo, zhi;
+  double xlo, xhi, ylo, yhi, zlo, zhi;
 };
 
 #endif

@@ -31,7 +31,7 @@ class ComputeStrainEnergy : public Compute {
 
 private:
   int t;
-  float Es;
+  double Es;
 };
 
 #endif

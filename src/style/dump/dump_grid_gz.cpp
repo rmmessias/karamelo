@@ -99,7 +99,7 @@ DumpGridGz::~DumpGridGz() {
 void DumpGridGz::write() {
 
   int ithread;
-  pair<thread, vector<float>> *th = nullptr;
+  pair<thread, vector<double>> *th = nullptr;
 
   for (int i=0; i<threads.size(); i++) {
     if (threads[i].second.empty()) {
@@ -116,7 +116,7 @@ void DumpGridGz::write() {
     th = &threads.back();
   }
 
-  vector<float> &buf = th->second;
+  vector<double> &buf = th->second;
 
   // Open dump file:
   size_t pos_asterisk = filename.find('*');
@@ -284,7 +284,7 @@ void DumpGridGz::write_to_file(bigint i, string fdump, bigint total_nn, bigint t
 
   int size_one = output_var.size();
 
-  vector<float> &buf = threads[i].second;
+  vector<double> &buf = threads[i].second;
 
   int m = 0;
   for (int j = 0; j < total_nn; j++) {

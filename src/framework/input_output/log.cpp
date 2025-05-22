@@ -26,7 +26,7 @@
 
 using namespace std;
 
-enum{INT,FLOAT,BIGINT};
+enum{INT,DOUBLE,BIGINT};
 
 Log::Log(MPM *mpm, vector<string> args) : Pointers(mpm)
 {
@@ -59,7 +59,7 @@ void Log::write()
     (this->*field[i].vfunc)(this->field[i].name); // Compute the output field
 
     if (field[i].typeflag==INT) soutput << ivalue << "\t";
-    if (field[i].typeflag==FLOAT) soutput << dvalue << "\t";
+    if (field[i].typeflag==DOUBLE) soutput << dvalue << "\t";
     if (field[i].typeflag==BIGINT) soutput << bivalue << "\t";
   }
 
@@ -77,12 +77,12 @@ void Log::parse_keywords(vector<string> keyword)
 {
   for (int i=0; i<keyword.size();i++){
     if (keyword[i].compare("step")==0)      addfield("Step", &Log::compute_step, BIGINT);
-    else if (keyword[i].compare("dt")==0)   addfield("dt", &Log::compute_dt, FLOAT);
-    else if (keyword[i].compare("time")==0) addfield("Time", &Log::compute_time, FLOAT);
+    else if (keyword[i].compare("dt")==0)   addfield("dt", &Log::compute_dt, DOUBLE);
+    else if (keyword[i].compare("time")==0) addfield("Time", &Log::compute_time, DOUBLE);
     else {
       // Check if the variable exists:   
       if (input->vars->count(keyword[i]) || input->expressions.count(keyword[i]) ){
-	addfield(keyword[i], &Log::compute_var, FLOAT);
+	addfield(keyword[i], &Log::compute_var, DOUBLE);
       } else {
 	error->all(FLERR,"Error: unknown log keyword " + keyword[i] + ".\n");
 	// std::cerr << "Out of Range error: " << oor.what() << '\n';

@@ -79,10 +79,10 @@ void FixHeatFluxParticles::prepare()
 
 void FixHeatFluxParticles::reduce()
 {
-  float qtot_reduced;
+  double qtot_reduced;
 
   // Reduce qtot:
-  MPI_Allreduce(&qtot, &qtot_reduced, 1, MPI_FLOAT, MPI_SUM,
+  MPI_Allreduce(&qtot, &qtot_reduced, 1, MPI_DOUBLE, MPI_SUM,
                 universe->uworld);
 
   (*input->vars)[id + "_s"] = Var(id + "_s", qtot_reduced);
@@ -96,18 +96,18 @@ void FixHeatFluxParticles::initial_integrate(Solid &solid)
 
   int groupbit = this->groupbit, dimension = domain->dimension;
   Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<float*> T = solid.T, vol = solid.vol, gamma = solid.gamma;
-  float invcp = solid.mat->invcp;
+  Kokkos::View<double*> T = solid.T, vol = solid.vol, gamma = solid.gamma;
+  double invcp = solid.mat->invcp;
 
-  Kokkos::View<float**> q_i = q->registers;
+  Kokkos::View<double**> q_i = q->registers;
 
   Kokkos::parallel_reduce("FixVelocityNodes::post_update_grid_state", solid.np_local,
-			  KOKKOS_LAMBDA(const int &ip, float &lqtot)
+			  KOKKOS_LAMBDA(const int &ip, double &lqtot)
       {
         if (!(mask[ip] & groupbit))
           return;
 
-	float Ap;
+	double Ap;
 	if (dimension == 1)
 	  Ap = 1;
 	else if (dimension == 2)

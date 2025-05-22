@@ -95,7 +95,7 @@ void FixInitialVelocityNodes::post_update_grid_state(Grid &grid)
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<float **> v_i = v[i]->registers;
+      Kokkos::View<double **> v_i = v[i]->registers;
 
       Kokkos::parallel_for("FixInitialVelocityNodes::post_update_grid_state", grid.nnodes_local + grid.nnodes_ghost,
       KOKKOS_LAMBDA(const int &in)
@@ -127,7 +127,7 @@ void FixInitialVelocityNodes::post_velocities_to_grid(Grid &grid)
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<float **> v_i = v[i]->registers;
+      Kokkos::View<double **> v_i = v[i]->registers;
 
       Kokkos::parallel_for("FixInitialVelocityNodes::post_update_grid_state", grid.nnodes_local + grid.nnodes_ghost,
       KOKKOS_LAMBDA(const int &in)

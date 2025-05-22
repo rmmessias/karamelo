@@ -59,15 +59,15 @@ public:
   EOSLinear(class MPM *, vector<string>);
   ~EOSLinear();
 
-  float rho0();
-  float K();
-  float G();
-  void compute_pressure(Solid &solid, Kokkos::View<float*> &pH) const override;
+  double rho0();
+  double K();
+  double G();
+  void compute_pressure(Solid &solid, Kokkos::View<double*> &pH) const override;
   void write_restart(ofstream *);
   void read_restart(ifstream *);
 
 protected:
-  float rho0_, K_;
+  double rho0_, K_;
 };
 
 #endif

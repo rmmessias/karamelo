@@ -63,10 +63,10 @@ using namespace std;
 
 const bool Input::DEBUG_EXPRESSIONS = false;
 
-extern constexpr float CONSTANT_PI      = Kokkos::numbers::    pi_v<float>;
-extern constexpr float CONSTANT_E       = Kokkos::numbers::     e_v<float>;
-extern constexpr float CONSTANT_EGAMMA  = Kokkos::numbers::egamma_v<float>;
-extern constexpr float CONSTANT_PHI     = Kokkos::numbers::   phi_v<float>;
+extern constexpr double CONSTANT_PI      = Kokkos::numbers::    pi_v<double>;
+extern constexpr double CONSTANT_E       = Kokkos::numbers::     e_v<double>;
+extern constexpr double CONSTANT_EGAMMA  = Kokkos::numbers::egamma_v<double>;
+extern constexpr double CONSTANT_PHI     = Kokkos::numbers::   phi_v<double>;
 
 Input::Input(MPM *mpm, int argc, char **argv) : Pointers(mpm)
 {
@@ -278,7 +278,7 @@ void Input::file()
  * Precedence == 2 for the addition and subtraction operators.\n
  * Precedence == 1 for the other known operators.\n
  * The function returns 0 if the operator is not known.*/
-float Input::precedence(const string op){
+double Input::precedence(const string op){
   if (op[0] == '>') return 1;
   // if (op == ">=") return 1;
   if (op[0] == '<') return 1;
@@ -503,13 +503,13 @@ string Input::remove_whitespace(string str){
   return str_;
 }
 
-float Input::parse(string str){
+double Input::parse(string str){
   error->all(FLERR, "Error: Input::parse deprecated function.\n");
   return nan("");
 }
 
 Expression &
-Input::parsev(const string &name, float value)
+Input::parsev(const string &name, double value)
 {
     const pair<map<string, Expression>::iterator, bool> it = expressions.emplace(piecewise_construct, forward_as_tuple(name), tuple<>());
     
@@ -532,7 +532,7 @@ Input::parsev(const string &name, float value)
         error->all(FLERR, name + " was not a literal expression.\n");
     }
 
-    expression.registers = Kokkos::View<float**>("expression", 1, 1);
+    expression.registers = Kokkos::View<double**>("expression", 1, 1);
 
     return expression;
 }
@@ -736,7 +736,7 @@ Var Input::parsev(string str)
       if (!max_index)
         cout << "MAX INDEX CANNOT BE ZERO" << endl;
         
-      expression.registers = Kokkos::View<float**>("expression", max_index, 1);
+      expression.registers = Kokkos::View<double**>("expression", max_index, 1);
     }
   }
 

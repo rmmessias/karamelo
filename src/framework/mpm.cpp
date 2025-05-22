@@ -110,7 +110,7 @@ MPM::~MPM()
 
   if (universe->me == 0) {
 
-    float totalclock = MPI_Wtime() - initclock;
+    double totalclock = MPI_Wtime() - initclock;
 
     int seconds = fmod(totalclock,60.0);
     totalclock  = (totalclock - seconds) / 60.0;
