@@ -16,6 +16,9 @@ karamelo*
 /examples/*.data
 /src/version.cpp
 
+#test
+test/
+
 # cmake
 CMakeCache.txt
 cmake_install.cmake

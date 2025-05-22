@@ -41,7 +41,7 @@ Update::Update(MPM *mpm) : Pointers(mpm)
 
   // Default scheme is MUSL:
   vector<string> scheme_args;
-  scheme_args.push_back("musl");
+  scheme_args.push_back("usl");
   create_scheme(scheme_args);
 
   method = nullptr;
