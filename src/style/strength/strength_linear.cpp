@@ -58,15 +58,15 @@ double StrengthLinear::G(){
 
 void
 StrengthLinear::update_deviatoric_stress(Solid &solid,
-                                              Kokkos::View<double*> &plastic_strain_increment,
-                                              Kokkos::View<Matrix3d*> &sigma_dev) const
+                                              Kokkos::View<double*,Kokkos::SharedSpace> &plastic_strain_increment,
+                                              Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev) const
 {
   double G_ = this->G_;
   double dt = update->dt;
 
-  Kokkos::View<Matrix3d*> ssigma = solid.sigma;
-  Kokkos::View<Matrix3d*> sD = solid.D;
-  Kokkos::View<double*> sdamage = solid.damage;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> ssigma = solid.sigma;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sD = solid.D;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
 
   Kokkos::parallel_for("EOSLinear::compute_pressure", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

@@ -11,7 +11,7 @@ class ExpressionOperandExpression:
   public ExpressionOperand<ExpressionOperandExpression>
 {
   string name;
-  Kokkos::View<double**> registers;
+  Kokkos::View<double**,Kokkos::SharedSpace> registers;
 
   friend class Input;
 

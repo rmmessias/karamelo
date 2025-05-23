@@ -112,22 +112,22 @@ void FixImpenetrableSurface::initial_integrate(Solid &solid) {
 
   double K = this->K;
   int groupbit = this->groupbit;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<double*> smass = solid.mass;
-  Kokkos::View<double*> svol = solid.vol;
-  Kokkos::View<Vector3d*> sx = solid.x;
-  Kokkos::View<Vector3d*> smbp = solid.mbp;
-  Kokkos::View<double*> sdamage = solid.damage;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> smass = solid.mass;
+  Kokkos::View<double*,Kokkos::SharedSpace> svol = solid.vol;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sx = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> smbp = solid.mbp;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
 
   double G = solid.mat->G;
 
-  Kokkos::View<double **> xs0_i = xs[0]->registers;
-  Kokkos::View<double **> xs1_i = xs[1]->registers;
-  Kokkos::View<double **> xs2_i = xs[2]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> xs0_i = xs[0]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> xs1_i = xs[1]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> xs2_i = xs[2]->registers;
 
-  Kokkos::View<double **> normal0_i = normal[0]->registers;
-  Kokkos::View<double **> normal1_i = normal[1]->registers;
-  Kokkos::View<double **> normal2_i = normal[2]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> normal0_i = normal[0]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> normal1_i = normal[1]->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> normal2_i = normal[2]->registers;
 
   double ftot_0, ftot_1, ftot_2;
 

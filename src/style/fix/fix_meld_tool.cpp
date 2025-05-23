@@ -121,9 +121,9 @@ void FixMeldTool::initial_integrate(Solid &solid)
   c2->evaluate(solid);
   theta->evaluate(solid);
 
-  Kokkos::View<double **> c1_ = c1->registers;
-  Kokkos::View<double **> c2_ = c2->registers;
-  Kokkos::View<double **> theta_ = theta->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> c1_ = c1->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> c2_ = c2->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> theta_ = theta->registers;
 
   int groupbit = this->groupbit;
   int dim = this->dim;
@@ -135,11 +135,11 @@ void FixMeldTool::initial_integrate(Solid &solid)
   double hi = this->hi;
   double Rmax = this->Rmax;
   double RmaxSq = this->RmaxSq;
-  Kokkos::View<double*> mass = solid.mass;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<Vector3d*> sx = solid.x;
-  Kokkos::View<Vector3d*> smbp = solid.mbp;
-  Kokkos::View<double*> sdamage = solid.damage;
+  Kokkos::View<double*,Kokkos::SharedSpace> mass = solid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sx = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> smbp = solid.mbp;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
   double G = solid.mat->G;
 
   double f0, f1, f2;

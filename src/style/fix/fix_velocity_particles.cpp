@@ -120,14 +120,14 @@ void FixVelocityParticles::initial_integrate(Solid &solid)
   }
 
   int groupbit = this->groupbit;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<Vector3d*> sv = solid.v, sv_update = solid.v_update;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sv = solid.v, sv_update = solid.v_update;
 
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<double **> v_i = v[i]->registers;
-      Kokkos::View<double **> v_prev_i = v_prev[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_i = v[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_prev_i = v_prev[i]->registers;
 
 
       Kokkos::parallel_for("FixVelocityParticles::initial_integrate", solid.np_local,
@@ -152,15 +152,15 @@ void FixVelocityParticles::post_advance_particles(Solid &solid) {
 
   int groupbit = this->groupbit;
   double dt = update->dt;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<double*> smass = solid.mass;
-  Kokkos::View<Vector3d*> sx = solid.x;
-  Kokkos::View<Vector3d*> sv = solid.v, sv_update = solid.v_update;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> smass = solid.mass;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sx = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sv = solid.v, sv_update = solid.v_update;
 
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<double **> v_i = v[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_i = v[i]->registers;
 
       Kokkos::parallel_reduce("FixVelocityParticles::post_advance_particles", solid.np_local,
       KOKKOS_LAMBDA(const int &ip, double &ftot_i)

@@ -58,8 +58,8 @@ void ComputeAverageTemperature::compute_value(Solid &solid) {
 
   double T, T_reduced;
 
-  Kokkos::View<double*> sT = solid.T;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> sT = solid.T;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

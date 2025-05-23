@@ -58,8 +58,8 @@ class Grid : public Pointers {
   bigint nnodes;         ///< total number of nodes in the domain
   bigint nnodes_local;   ///< number of nodes (in this CPU)
   bigint nnodes_ghost;   ///< number of ghost nodes (in this CPU)
-  Kokkos::View<tagint*> ntag;   ///< unique identifier for nodes in the system.
-  Kokkos::View<tagint*> map_ntag;  ///< map_ntag[ntag[i]] = i;
+  Kokkos::View<tagint*,Kokkos::SharedSpace> ntag;   ///< unique identifier for nodes in the system.
+  Kokkos::View<tagint*,Kokkos::SharedSpace> map_ntag;  ///< map_ntag[ntag[i]] = i;
 
   int nx;                ///< number of nodes along x on this CPU
   int ny;                ///< number of nodes along y on this CPU
@@ -74,29 +74,29 @@ class Grid : public Pointers {
   map<int, vector<tagint>> dest_nshared;   ///< for each CPU, list the tags of shared nodes
   map<int, vector<tagint>> origin_nshared; ///< for each CPU, list the tags of ghost nodes
 
-  Kokkos::View<int*> nowner;    ///< which CPU owns each node (universe->me for local nodes, other CPU for ghost nodes
+  Kokkos::View<int*,Kokkos::SharedSpace> nowner;    ///< which CPU owns each node (universe->me for local nodes, other CPU for ghost nodes
 
   double cellsize;       ///< size of the square cells forming the grid
 
-  Kokkos::View<Vector3d*> x;            ///< nodes' current position
-  Kokkos::View<Vector3d*> x0;           ///< nodes' position in the reference coordinate system
-  Kokkos::View<Vector3d**> v;           ///< nodes' velocity at time t
-  Kokkos::View<Vector3d**> v_update;    ///< nodes' velocity at time t+dt
-  Kokkos::View<Vector3d**> mb;          ///< nodes' external forces times the mass
-  Kokkos::View<Vector3d**> f;           ///< nodes' internal forces
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x;            ///< nodes' current position
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x0;           ///< nodes' position in the reference coordinate system
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> v;           ///< nodes' velocity at time t
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> v_update;    ///< nodes' velocity at time t+dt
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> mb;          ///< nodes' external forces times the mass
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> f;           ///< nodes' internal forces
 
-  Kokkos::View<double**> mass;           ///< nodes' current mass
-  Kokkos::View<double**> vol;            ///< nodes' current volume
-  Kokkos::View<int*> mask;              ///< nodes' group mask
-  Kokkos::View<bool**> rigid;           ///< are the nodes in the area of influence of a rigid body?
-  Kokkos::View<Vector3i*> ntype;        ///< node type in x, y, and z directions (False for an edge, True otherwise)
+  Kokkos::View<double**,Kokkos::SharedSpace> mass;           ///< nodes' current mass
+  Kokkos::View<double**,Kokkos::SharedSpace> vol;            ///< nodes' current volume
+  Kokkos::View<int*,Kokkos::SharedSpace> mask;              ///< nodes' group mask
+  Kokkos::View<bool**,Kokkos::SharedSpace> rigid;           ///< are the nodes in the area of influence of a rigid body?
+  Kokkos::View<Vector3i*,Kokkos::SharedSpace> ntype;        ///< node type in x, y, and z directions (False for an edge, True otherwise)
 
-  Kokkos::View<double**> T;                ///< nodes' temperature at time t
-  Kokkos::View<double**> T_update;         ///< nodes' temperature at time t+dt
-  Kokkos::View<double**> Qext;             ///< nodes' external thermal driving force
-  Kokkos::View<double**> Qint;             ///< nodes' internal thermal driving force
+  Kokkos::View<double**,Kokkos::SharedSpace> T;                ///< nodes' temperature at time t
+  Kokkos::View<double**,Kokkos::SharedSpace> T_update;         ///< nodes' temperature at time t+dt
+  Kokkos::View<double**,Kokkos::SharedSpace> Qext;             ///< nodes' external thermal driving force
+  Kokkos::View<double**,Kokkos::SharedSpace> Qint;             ///< nodes' internal thermal driving force
 
-  Kokkos::View<Vector3d**> normal;        ///< nodes' normal (for contact purposes)
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> normal;        ///< nodes' normal (for contact purposes)
 
   Grid(class MPM *);
   void grow(int);              ///< Allocate memory for the vectors used for local nodes or resize them  

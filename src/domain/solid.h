@@ -46,64 +46,64 @@ class Solid : public Pointers {
   double vtot;                              ///< Total volume
   double mtot;                              ///< Total mass
 
-  Kokkos::View<tagint*> ptag;               ///< Unique identifier for particles in the system
+  Kokkos::View<tagint*,Kokkos::SharedSpace> ptag;               ///< Unique identifier for particles in the system
 
-  Kokkos::View<Vector3d*> x;                ///< Particles' current position
-  Kokkos::View<Vector3d*> x0;               ///< Particles' reference position
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x;                ///< Particles' current position
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x0;               ///< Particles' reference position
 
   
-  Kokkos::View<Vector3d*> rp;               ///< Current domain vector (CPDI1)
-  Kokkos::View<Vector3d*> rp0;              ///< Reference domain vector (CPDI1)
-  Kokkos::View<Vector3d*> xpc;              ///< Current position of the corners of the particles' domain (CPDI2o)
-  Kokkos::View<Vector3d*> xpc0;             ///< Reference position of the corners of the particles' domain (CPDI2)
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> rp;               ///< Current domain vector (CPDI1)
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> rp0;              ///< Reference domain vector (CPDI1)
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> xpc;              ///< Current position of the corners of the particles' domain (CPDI2o)
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> xpc0;             ///< Reference position of the corners of the particles' domain (CPDI2)
   int nc;                                   ///< Number of corners per particles: \f$2^{dimension}\f$
   
-  Kokkos::View<Vector3d*> v;                ///< Particles' current velocity
-  Kokkos::View<Vector3d*> v_update;         ///< Particles' velocity at time t+dt
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> v;                ///< Particles' current velocity
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> v_update;         ///< Particles' velocity at time t+dt
 
-  Kokkos::View<Vector3d*> a;                ///< Particles' acceleration
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> a;                ///< Particles' acceleration
 
-  Kokkos::View<Vector3d*> mbp;              ///< Particles' external forces times mass
-  Kokkos::View<Vector3d*> f;                ///< Particles' internal forces
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> mbp;              ///< Particles' external forces times mass
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> f;                ///< Particles' internal forces
 
-  Kokkos::View<Matrix3d*> sigma;            ///< Stress matrix
-  Kokkos::View<Matrix3d*> strain_el;        ///< Elastic strain matrix
-  Kokkos::View<Matrix3d*> vol0PK1;          ///< Transpose of the 1st Piola-Kirchhoff matrix times vol0
-  Kokkos::View<Matrix3d*> L;                ///< Velocity gradient matrix
-  Kokkos::View<Matrix3d*> F;                ///< Deformation gradient matrix
-  Kokkos::View<Matrix3d*> R;                ///< Rotation matrix
-  Kokkos::View<Matrix3d*> D;                ///< Symmetric part of L
-  Kokkos::View<Matrix3d*> Finv;             ///< Inverse of the deformation gradient matrix
-  Kokkos::View<Matrix3d*> Fdot;             ///< Rate of deformation gradient matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sigma;            ///< Stress matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> strain_el;        ///< Elastic strain matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> vol0PK1;          ///< Transpose of the 1st Piola-Kirchhoff matrix times vol0
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> L;                ///< Velocity gradient matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> F;                ///< Deformation gradient matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> R;                ///< Rotation matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> D;                ///< Symmetric part of L
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> Finv;             ///< Inverse of the deformation gradient matrix
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> Fdot;             ///< Rate of deformation gradient matrix
   double                   Di;               ///< Unique eigenvalue of the inertia tensor
   // vector<Matrix3d> BDinv;            ///< APIC B*Dinv tensor
 
-  Kokkos::View<double*> J;                         ///< Determinant of the deformation matrix
-  Kokkos::View<double*> vol0;                      ///< Particles' reference volume
-  Kokkos::View<double*> vol;                       ///< Particles' current volume
-  Kokkos::View<double*> rho0;                      ///< Particles' reference density
-  Kokkos::View<double*> rho;                       ///< Particles' current density
-  Kokkos::View<double*> mass;                      ///< Particles' current mass
-  Kokkos::View<double*> eff_plastic_strain;        ///< Particles' effective plastic strain
-  Kokkos::View<double*> eff_plastic_strain_rate;   ///< Particles' effective plastic strain rate
-  Kokkos::View<double*> damage;                    ///< Particles' damage variable
-  Kokkos::View<double*> damage_init;               ///< Particles' damage initiation variable
-  Kokkos::View<double*> ienergy;                   ///< Particles' internal energy
-  Kokkos::View<int*> mask;                         ///< Particles' group mask
+  Kokkos::View<double*,Kokkos::SharedSpace> J;                         ///< Determinant of the deformation matrix
+  Kokkos::View<double*,Kokkos::SharedSpace> vol0;                      ///< Particles' reference volume
+  Kokkos::View<double*,Kokkos::SharedSpace> vol;                       ///< Particles' current volume
+  Kokkos::View<double*,Kokkos::SharedSpace> rho0;                      ///< Particles' reference density
+  Kokkos::View<double*,Kokkos::SharedSpace> rho;                       ///< Particles' current density
+  Kokkos::View<double*,Kokkos::SharedSpace> mass;                      ///< Particles' current mass
+  Kokkos::View<double*,Kokkos::SharedSpace> eff_plastic_strain;        ///< Particles' effective plastic strain
+  Kokkos::View<double*,Kokkos::SharedSpace> eff_plastic_strain_rate;   ///< Particles' effective plastic strain rate
+  Kokkos::View<double*,Kokkos::SharedSpace> damage;                    ///< Particles' damage variable
+  Kokkos::View<double*,Kokkos::SharedSpace> damage_init;               ///< Particles' damage initiation variable
+  Kokkos::View<double*,Kokkos::SharedSpace> ienergy;                   ///< Particles' internal energy
+  Kokkos::View<int*,Kokkos::SharedSpace> mask;                         ///< Particles' group mask
 
-  Kokkos::View<double*> T;                         ///< Particles' current temperature
-  Kokkos::View<double*> gamma;                     ///< Particles' heat source
-  Kokkos::View<Vector3d*> q;                       ///< Particles' heat flux
+  Kokkos::View<double*,Kokkos::SharedSpace> T;                         ///< Particles' current temperature
+  Kokkos::View<double*,Kokkos::SharedSpace> gamma;                     ///< Particles' heat source
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> q;                       ///< Particles' heat flux
   
-  Kokkos::View<double*> dtCFL;
+  Kokkos::View<double*,Kokkos::SharedSpace> dtCFL;
 
-  Kokkos::View<int**> neigh_n;              ///< Particles' node neighbors
-  Kokkos::View<double**> wf;                ///< Particles' node neighbors' weight functions \f$\Phi\f$
-  Kokkos::View<double***> wf_corners;       ///< Particles' node neighbors' weight functions \f$\Phi\f$ evaluated at the corners of the particle's domain (used in CPDI)
-  Kokkos::View<Vector3d**> wfd;             ///< Particles' node neighbors' weight function derivatives \f$\partial \Phi/ \partial x\f$
+  Kokkos::View<int**,Kokkos::SharedSpace> neigh_n;              ///< Particles' node neighbors
+  Kokkos::View<double**,Kokkos::SharedSpace> wf;                ///< Particles' node neighbors' weight functions \f$\Phi\f$
+  Kokkos::View<double***,Kokkos::SharedSpace> wf_corners;       ///< Particles' node neighbors' weight functions \f$\Phi\f$ evaluated at the corners of the particle's domain (used in CPDI)
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> wfd;             ///< Particles' node neighbors' weight function derivatives \f$\partial \Phi/ \partial x\f$
   size_t neighbor_nodes_per_particle;       ///< Particles' maximum number of neighbors
 
-  Kokkos::View<int*> error_flag;            ///< Error codes
+  Kokkos::View<int*,Kokkos::SharedSpace> error_flag;            ///< Error codes
 
   Kokkos::MDRangePolicy<Kokkos::Rank<2>> neigh_policy;
 

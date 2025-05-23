@@ -150,8 +150,8 @@ void Grid::init(double *solidlo, double *solidhi) {
   // Determine the total number of nodes:
   nnodes = nx_global * ny_global * nz_global;
   
-  map_ntag = Kokkos::View<tagint*>("map_ntag", nnodes);
-  Kokkos::View<tagint*> map_ntag = this->map_ntag;
+  map_ntag = Kokkos::View<tagint*,Kokkos::SharedSpace>("map_ntag", nnodes);
+  Kokkos::View<tagint*,Kokkos::SharedSpace> map_ntag = this->map_ntag;
   Kokkos::parallel_for("set map_ntag", nnodes,
   KOKKOS_LAMBDA (const int &in)
   {
@@ -222,13 +222,13 @@ void Grid::init(double *solidlo, double *solidhi) {
   if (subhi[2] - boundhi[2] > -1.0e-12) isnt_subhi_boundhi[2] = false;
 
   // For each node, check if it needs to be sent to another proc:
-  Kokkos::View<tagint*>::HostMirror ntag_mirror = create_mirror(ntag);
+  Kokkos::View<tagint*,Kokkos::SharedSpace>::HostMirror ntag_mirror = create_mirror(ntag);
   Kokkos::deep_copy(ntag_mirror, ntag);
 
-  Kokkos::View<Vector3d*>::HostMirror x0_mirror = create_mirror(x0);
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror x0_mirror = create_mirror(x0);
   Kokkos::deep_copy(x0_mirror, x0);
 
-  Kokkos::View<Vector3i*>::HostMirror ntype_mirror = create_mirror(ntype);
+  Kokkos::View<Vector3i*,Kokkos::SharedSpace>::HostMirror ntype_mirror = create_mirror(ntype);
   Kokkos::deep_copy(ntype_mirror, ntype);
 
   for (int in=0; in<nnodes_local; in++){
@@ -326,13 +326,13 @@ void Grid::init(double *solidlo, double *solidhi) {
   int nx = this->nx, ny = this->ny, nz = this->nz;
   int nx_global = this->nx_global, ny_global = this->ny_global, nz_global = this->nz_global;
 
-  Kokkos::View<tagint*> ntag = this->ntag;
-  Kokkos::View<int*> nowner = this->nowner;
+  Kokkos::View<tagint*,Kokkos::SharedSpace> ntag = this->ntag;
+  Kokkos::View<int*,Kokkos::SharedSpace> nowner = this->nowner;
 
-  Kokkos::View<Vector3d*> x = this->x;
-  Kokkos::View<Vector3d*> x0 = this->x0;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x = this->x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x0 = this->x0;
 
-  Kokkos::View<Vector3i*> ntype = this->ntype;
+  Kokkos::View<Vector3i*,Kokkos::SharedSpace> ntype = this->ntype;
 
   Kokkos::parallel_for(__PRETTY_FUNCTION__, Kokkos::MDRangePolicy<Kokkos::Rank<3>>(
     { 0, 0, 0 }, { (size_t)nx, (size_t)ny, (size_t)nz }),
@@ -419,25 +419,25 @@ void Grid::setup(){
 void Grid::grow(int nn){
   //nnodes_local = nn;
 
-  ntag   = Kokkos::View<tagint*>("ntag",   nn);
-  nowner = Kokkos::View<int*>   ("nowner", nn);
+  ntag   = Kokkos::View<tagint*,Kokkos::SharedSpace>("ntag",   nn);
+  nowner = Kokkos::View<int*,Kokkos::SharedSpace>   ("nowner", nn);
 
-  x0       = Kokkos::View<Vector3d*>("x0",       nn);
-  x        = Kokkos::View<Vector3d*>("x",        nn);
+  x0       = Kokkos::View<Vector3d*,Kokkos::SharedSpace>("x0",       nn);
+  x        = Kokkos::View<Vector3d*,Kokkos::SharedSpace>("x",        nn);
 
   int ns = nsolids >= 1 && update->method->slip_contacts? nsolids: 1;
 
-  v        = Kokkos::View<Vector3d**>("v",        ns, nn);
-  v_update = Kokkos::View<Vector3d**>("v_update", ns, nn);
-  mb       = Kokkos::View<Vector3d**>("mb",       ns, nn);
-  f        = Kokkos::View<Vector3d**>("f",        ns, nn);
+  v        = Kokkos::View<Vector3d**,Kokkos::SharedSpace>("v",        ns, nn);
+  v_update = Kokkos::View<Vector3d**,Kokkos::SharedSpace>("v_update", ns, nn);
+  mb       = Kokkos::View<Vector3d**,Kokkos::SharedSpace>("mb",       ns, nn);
+  f        = Kokkos::View<Vector3d**,Kokkos::SharedSpace>("f",        ns, nn);
 
-  mass = Kokkos::View<double**>("mass", ns, nn);
+  mass = Kokkos::View<double**,Kokkos::SharedSpace>("mass", ns, nn);
   if (update->method->anti_volumetric_locking)
-    vol = Kokkos::View<double**>("vol", ns, nn);
-  mask = Kokkos::View<int*>   ("mask", nn);
+    vol = Kokkos::View<double**,Kokkos::SharedSpace>("vol", ns, nn);
+  mask = Kokkos::View<int*,Kokkos::SharedSpace>   ("mask", nn);
 
-  Kokkos::View<int*> mask = this->mask;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = this->mask;
 
   Kokkos::parallel_for(__PRETTY_FUNCTION__, nn,
   KOKKOS_LAMBDA(int i)
@@ -445,12 +445,12 @@ void Grid::grow(int nn){
     mask[i] = 1;
   });
 
-  ntype    = Kokkos::View<Vector3i*>("ntype",  nn);
-  rigid    = Kokkos::View<bool**>   ("rigid",  ns, nn);
-  T        = Kokkos::View<double**>("T",        ns, nn);
-  T_update = Kokkos::View<double**>("T_update", ns, nn);
-  Qext     = Kokkos::View<double**>("Qext",     ns, nn);
-  Qint     = Kokkos::View<double**>("Qint",     ns, nn);
+  ntype    = Kokkos::View<Vector3i*,Kokkos::SharedSpace>("ntype",  nn);
+  rigid    = Kokkos::View<bool**,Kokkos::SharedSpace>   ("rigid",  ns, nn);
+  T        = Kokkos::View<double**,Kokkos::SharedSpace>("T",        ns, nn);
+  T_update = Kokkos::View<double**,Kokkos::SharedSpace>("T_update", ns, nn);
+  Qext     = Kokkos::View<double**,Kokkos::SharedSpace>("Qext",     ns, nn);
+  Qint     = Kokkos::View<double**,Kokkos::SharedSpace>("Qint",     ns, nn);
 
-  normal   = Kokkos::View<Vector3d**>("normal", ns, nn);
+  normal   = Kokkos::View<Vector3d**,Kokkos::SharedSpace>("normal", ns, nn);
 }

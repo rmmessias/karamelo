@@ -60,10 +60,10 @@ void DeleteParticles::delete_region(vector<string> args, int isolid) {
       int &np_local = s.np_local;
 
       /* Create the list of particles to remove*/
-      Kokkos::View<bool*> dlist("dlist", np_local);
+      Kokkos::View<bool*,Kokkos::SharedSpace> dlist("dlist", np_local);
 
-      Kokkos::View<bool*>::HostMirror     dlist_mirror = create_mirror(dlist);
-      Kokkos::View<Vector3d*>::HostMirror x0_mirror    = create_mirror(s.x0);
+      Kokkos::View<bool*,Kokkos::SharedSpace>::HostMirror     dlist_mirror = create_mirror(dlist);
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror x0_mirror    = create_mirror(s.x0);
       deep_copy(x0_mirror, s.x0);
 
       for (int ip = 0; ip < np_local; ip++) {
@@ -80,8 +80,8 @@ void DeleteParticles::delete_region(vector<string> args, int isolid) {
 
 
       /* Create a View containing the indexes of the particles to keep.*/
-      Kokkos::View<int*> sum_post("sum_post", np_local);
-      Kokkos::View<int*> inew    ("inew"    , np_local);
+      Kokkos::View<int*,Kokkos::SharedSpace> sum_post("sum_post", np_local);
+      Kokkos::View<int*,Kokkos::SharedSpace> inew    ("inew"    , np_local);
 
       Kokkos::parallel_scan("scan", np_local,
 			    KOKKOS_LAMBDA(int ip, int &partial_sum, bool is_final)
@@ -96,46 +96,46 @@ void DeleteParticles::delete_region(vector<string> args, int isolid) {
 
       bool temp = update->method->temp;
 
-      Kokkos::View<tagint*> ptag = s.ptag;
+      Kokkos::View<tagint*,Kokkos::SharedSpace> ptag = s.ptag;
 
-      Kokkos::View<Vector3d*> x = s.x;
-      Kokkos::View<Vector3d*> x0 = s.x0;
-      Kokkos::View<Vector3d*> v = s.v;
-      Kokkos::View<Vector3d*> v_update = s.v_update;
-      Kokkos::View<Vector3d*> a = s.a;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> x = s.x;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> x0 = s.x0;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> v = s.v;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> v_update = s.v_update;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> a = s.a;
 
-      Kokkos::View<Vector3d*> mbp = s.mbp;
-      Kokkos::View<Vector3d*> f = s.f;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> mbp = s.mbp;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> f = s.f;
 
-      Kokkos::View<Matrix3d*> sigma = s.sigma;
-      Kokkos::View<Matrix3d*> strain_el = s.strain_el;
-      Kokkos::View<Matrix3d*> vol0PK1 = s.vol0PK1;
-      Kokkos::View<Matrix3d*> L = s.L;
-      Kokkos::View<Matrix3d*> F = s.F;
-      Kokkos::View<Matrix3d*> R = s.R;
-      Kokkos::View<Matrix3d*> D = s.D;
-      Kokkos::View<Matrix3d*> Finv = s.Finv;
-      Kokkos::View<Matrix3d*> Fdot = s.Fdot;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sigma = s.sigma;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> strain_el = s.strain_el;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> vol0PK1 = s.vol0PK1;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> L = s.L;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> F = s.F;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> R = s.R;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> D = s.D;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> Finv = s.Finv;
+      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> Fdot = s.Fdot;
 
-      Kokkos::View<double*> J = s.J;
-      Kokkos::View<double*> vol = s.vol;
-      Kokkos::View<double*> vol0 = s.vol0;
-      Kokkos::View<double*> rho = s.rho;
-      Kokkos::View<double*> rho0 = s.rho0;
-      Kokkos::View<double*> mass = s.mass;
-      Kokkos::View<double*> eff_plastic_strain = s.eff_plastic_strain;
-      Kokkos::View<double*> eff_plastic_strain_rate = s.eff_plastic_strain_rate;
-      Kokkos::View<double*> damage = s.damage;
-      Kokkos::View<double*> damage_init = s.damage_init;
-      Kokkos::View<double*> ienergy = s.ienergy;
-      Kokkos::View<int*> mask = s.mask;
+      Kokkos::View<double*,Kokkos::SharedSpace> J = s.J;
+      Kokkos::View<double*,Kokkos::SharedSpace> vol = s.vol;
+      Kokkos::View<double*,Kokkos::SharedSpace> vol0 = s.vol0;
+      Kokkos::View<double*,Kokkos::SharedSpace> rho = s.rho;
+      Kokkos::View<double*,Kokkos::SharedSpace> rho0 = s.rho0;
+      Kokkos::View<double*,Kokkos::SharedSpace> mass = s.mass;
+      Kokkos::View<double*,Kokkos::SharedSpace> eff_plastic_strain = s.eff_plastic_strain;
+      Kokkos::View<double*,Kokkos::SharedSpace> eff_plastic_strain_rate = s.eff_plastic_strain_rate;
+      Kokkos::View<double*,Kokkos::SharedSpace> damage = s.damage;
+      Kokkos::View<double*,Kokkos::SharedSpace> damage_init = s.damage_init;
+      Kokkos::View<double*,Kokkos::SharedSpace> ienergy = s.ienergy;
+      Kokkos::View<int*,Kokkos::SharedSpace> mask = s.mask;
 
-      Kokkos::View<double*> T = s.T;
-      Kokkos::View<double*> gamma = s.gamma;
-      Kokkos::View<Vector3d*> q = s.q;
+      Kokkos::View<double*,Kokkos::SharedSpace> T = s.T;
+      Kokkos::View<double*,Kokkos::SharedSpace> gamma = s.gamma;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> q = s.q;
 
-      Kokkos::View<int*> error_flag = s.error_flag;
-      Kokkos::View<double*> dtCFL = s.dtCFL;
+      Kokkos::View<int*,Kokkos::SharedSpace> error_flag = s.error_flag;
+      Kokkos::View<double*,Kokkos::SharedSpace> dtCFL = s.dtCFL;
 
       double vtot_local;
       double mtot_local;

@@ -15,7 +15,7 @@ class Input;
 class Expression
 {
 public:
-  Kokkos::View<double**> registers;
+  Kokkos::View<double**,Kokkos::SharedSpace> registers;
   int index = 0;
 
   class Operation;

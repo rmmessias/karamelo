@@ -67,8 +67,8 @@ void ComputeMaxPosition::compute_value(Solid &solid) {
 
   double Xmax_reduced[3] = {0., 0., 0.};
   double Xmax_tmp[3] = {0., 0., 0.};
-  Kokkos::View<Vector3d*> sx = solid.x;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sx = solid.x;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

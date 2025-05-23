@@ -64,8 +64,8 @@ void ComputeAverageStress::compute_value(Solid &solid) {
 #if 1
   double s0, s1, s2, s3, s4, s5;
 
-  Kokkos::View<Matrix3d*> sigma = solid.sigma;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sigma = solid.sigma;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 
@@ -101,8 +101,8 @@ void ComputeAverageStress::compute_value(Solid &solid) {
 #else
   Matrix3d sigma_reduced_local, sigma_reduced;
 
-  Kokkos::View<Matrix3d*> sigma = solid.sigma;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sigma = solid.sigma;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

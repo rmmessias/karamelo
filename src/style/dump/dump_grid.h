@@ -27,20 +27,20 @@ DumpStyle(grid,DumpGrid)
 #include <utility>
 
 class DumpGrid : public Dump {
-  Kokkos::View<tagint*>::HostMirror ntag;   ///< unique identifier for nodes in the system.
+  Kokkos::View<tagint*,Kokkos::SharedSpace>::HostMirror ntag;   ///< unique identifier for nodes in the system.
   
-  Kokkos::View<Vector3d*>::HostMirror x;            ///< nodes' current position
-  Kokkos::View<Vector3d**>::HostMirror v;           ///< nodes' velocity at time t
-  Kokkos::View<Vector3d**>::HostMirror v_update;    ///< nodes' velocity at time t + dt
-  Kokkos::View<Vector3d**>::HostMirror mb;          ///< nodes' external forces times the mass
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror x;            ///< nodes' current position
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace>::HostMirror v;           ///< nodes' velocity at time t
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace>::HostMirror v_update;    ///< nodes' velocity at time t + dt
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace>::HostMirror mb;          ///< nodes' external forces times the mass
 
-  Kokkos::View<double**>::HostMirror mass;           ///< nodes' current mass
-  Kokkos::View<int*>::HostMirror mask;              ///< nodes' group mask
-  Kokkos::View<double**>::HostMirror vol;            ///< nodes' current volume
-  Kokkos::View<bool**>::HostMirror rigid;           ///< are the nodes in the area of influence of a rigid body?
-  Kokkos::View<Vector3i*>::HostMirror ntype;        ///< node type in x, y, and z directions (False for an edge, True otherwise)
+  Kokkos::View<double**,Kokkos::SharedSpace>::HostMirror mass;           ///< nodes' current mass
+  Kokkos::View<int*,Kokkos::SharedSpace>::HostMirror mask;              ///< nodes' group mask
+  Kokkos::View<double**,Kokkos::SharedSpace>::HostMirror vol;            ///< nodes' current volume
+  Kokkos::View<bool**,Kokkos::SharedSpace>::HostMirror rigid;           ///< are the nodes in the area of influence of a rigid body?
+  Kokkos::View<Vector3i*,Kokkos::SharedSpace>::HostMirror ntype;        ///< node type in x, y, and z directions (False for an edge, True otherwise)
 
-  Kokkos::View<double**>::HostMirror T;              ///< nodes' temperature at time t
+  Kokkos::View<double**,Kokkos::SharedSpace>::HostMirror T;              ///< nodes' temperature at time t
 
  public:
   DumpGrid(MPM *, vector<string>);

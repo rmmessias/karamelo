@@ -71,8 +71,8 @@ void ComputeAverageVelocity::compute_value(Solid &solid) {
 
   vx = vy = vz = 0;
 
-  Kokkos::View<Vector3d*> sv = solid.v;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> sv = solid.v;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

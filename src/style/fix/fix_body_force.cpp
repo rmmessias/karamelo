@@ -112,14 +112,14 @@ void FixBodyForce::post_particles_to_grid(Grid &grid)
 
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
-  Kokkos::View<double**> mass = grid.mass;
-  Kokkos::View<int*> mask = grid.mask;
-  Kokkos::View<Vector3d**> mb = grid.mb;
+  Kokkos::View<double**,Kokkos::SharedSpace> mass = grid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = grid.mask;
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> mb = grid.mb;
 
   for (int i = 0; i < 3; i++)
     if (fb[i])
     {
-      Kokkos::View<double **> fb_i = fb[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> fb_i = fb[i]->registers;
 
       Kokkos::parallel_reduce("FixBodyForce::post_particles_to_grid", grid.nnodes_local + grid.nnodes_ghost,
                               KOKKOS_LAMBDA(const int &in, double &ftot_i)

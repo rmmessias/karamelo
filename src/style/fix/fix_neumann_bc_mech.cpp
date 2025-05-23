@@ -99,14 +99,14 @@ void FixNeumannBCMech::initial_integrate(Solid &solid)
 
   int groupbit = this->groupbit;
   int dimension = domain->dimension;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<Vector3d*> mbp = solid.mbp;
-  Kokkos::View<double*> vol = solid.vol;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> mbp = solid.mbp;
+  Kokkos::View<double*,Kokkos::SharedSpace> vol = solid.vol;
 
   for (int i = 0; i < domain->dimension; i++)
     if (t[i])
       {
-	Kokkos::View<double **> t_i = t[i]->registers;
+	Kokkos::View<double **,Kokkos::SharedSpace> t_i = t[i]->registers;
 	Kokkos::parallel_reduce("FixNeumannBCMech::initial_integrate", solid.np_local,
 			     KOKKOS_LAMBDA(const int &ip, double &ftot_i)
 			     {

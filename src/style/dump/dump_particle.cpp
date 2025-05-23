@@ -131,8 +131,8 @@ void DumpParticle::write()
         Kokkos::deep_copy(h_R, s->R);
       }
       
-      Kokkos::View<double*>::HostMirror h_T;
-      Kokkos::View<double*>::HostMirror h_gamma;
+      Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror h_T;
+      Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror h_gamma;
       if (update->method->temp) {
         h_T = Kokkos::create_mirror_view(s->T);
         h_gamma = Kokkos::create_mirror_view(s->gamma);

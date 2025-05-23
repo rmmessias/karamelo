@@ -139,15 +139,15 @@ void FixVelocityNodes::post_update_grid_state(Grid &grid)
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
   double dt = update->dt;
-  Kokkos::View<double**> mass = grid.mass;
-  Kokkos::View<int*> mask = grid.mask;
-  Kokkos::View<Vector3d**> gv = grid.v, gv_update = grid.v_update;
+  Kokkos::View<double**,Kokkos::SharedSpace> mass = grid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = grid.mask;
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> gv = grid.v, gv_update = grid.v_update;
 
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<double **> v_i = v[i]->registers;
-      Kokkos::View<double **> v_prev_i = v_prev[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_i = v[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_prev_i = v_prev[i]->registers;
 
       bool ileq = leq[i];
       bool igeq = geq[i];
@@ -186,13 +186,13 @@ void FixVelocityNodes::post_velocities_to_grid(Grid &grid) {
 
   int groupbit = this->groupbit;
   int solid_gpos = update->method->slip_contacts ? this->solid_gpos : 0;
-  Kokkos::View<int*> mask = grid.mask;
-  Kokkos::View<Vector3d**> gv = grid.v;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = grid.mask;
+  Kokkos::View<Vector3d**,Kokkos::SharedSpace> gv = grid.v;
 
   for (int i = 0; i < 3; i++)
     if (v[i])
     {
-      Kokkos::View<double **> v_i = v[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> v_i = v[i]->registers;
 
       bool ileq = leq[i];
       bool igeq = geq[i];

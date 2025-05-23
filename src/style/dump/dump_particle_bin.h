@@ -27,29 +27,29 @@ DumpStyle(particle/bin,DumpParticleBin)
 #include <utility>
 
 class DumpParticleBin : public Dump {
-  deque<Kokkos::View<tagint*>::HostMirror> ptag;               ///< Unique identifier for particles in the system
+  deque<Kokkos::View<tagint*,Kokkos::SharedSpace>::HostMirror> ptag;               ///< Unique identifier for particles in the system
 
-  deque<Kokkos::View<Vector3d*>::HostMirror> x;                ///< Particles' current position
-  deque<Kokkos::View<Vector3d*>::HostMirror> x0;               ///< Particles' reference position
+  deque<Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror> x;                ///< Particles' current position
+  deque<Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror> x0;               ///< Particles' reference position
   
-  deque<Kokkos::View<Vector3d*>::HostMirror> v;                ///< Particles' current velocity
+  deque<Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror> v;                ///< Particles' current velocity
 
-  deque<Kokkos::View<Vector3d*>::HostMirror> mbp;              ///< Particles' external forces times mass
+  deque<Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror> mbp;              ///< Particles' external forces times mass
 
-  deque<Kokkos::View<Matrix3d*>::HostMirror> sigma;            ///< Stress matrix
-  deque<Kokkos::View<Matrix3d*>::HostMirror> strain_el;        ///< Elastic strain matrix
-  deque<Kokkos::View<Matrix3d*>::HostMirror> R;                ///< Rotation matrix
+  deque<Kokkos::View<Matrix3d*,Kokkos::SharedSpace>::HostMirror> sigma;            ///< Stress matrix
+  deque<Kokkos::View<Matrix3d*,Kokkos::SharedSpace>::HostMirror> strain_el;        ///< Elastic strain matrix
+  deque<Kokkos::View<Matrix3d*,Kokkos::SharedSpace>::HostMirror> R;                ///< Rotation matrix
 
-  deque<Kokkos::View<double*>::HostMirror> vol;                       ///< Particles' current volume
-  deque<Kokkos::View<double*>::HostMirror> mass;                      ///< Particles' current mass
-  deque<Kokkos::View<double*>::HostMirror> eff_plastic_strain;        ///< Particles' effective plastic strain
-  deque<Kokkos::View<double*>::HostMirror> eff_plastic_strain_rate;   ///< Particles' effective plastic strain rate
-  deque<Kokkos::View<double*>::HostMirror> damage;                    ///< Particles' damage variable
-  deque<Kokkos::View<double*>::HostMirror> damage_init;               ///< Particles' damage initiation variable
-  deque<Kokkos::View<double*>::HostMirror> ienergy;                   ///< Particles' internal energy
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> vol;                       ///< Particles' current volume
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> mass;                      ///< Particles' current mass
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> eff_plastic_strain;        ///< Particles' effective plastic strain
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> eff_plastic_strain_rate;   ///< Particles' effective plastic strain rate
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> damage;                    ///< Particles' damage variable
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> damage_init;               ///< Particles' damage initiation variable
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> ienergy;                   ///< Particles' internal energy
 
-  deque<Kokkos::View<double*>::HostMirror> T;                         ///< Particles' current temperature
-  deque<Kokkos::View<double*>::HostMirror> gamma;                     ///< Particles' heat source
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> T;                         ///< Particles' current temperature
+  deque<Kokkos::View<double*,Kokkos::SharedSpace>::HostMirror> gamma;                     ///< Particles' heat source
 
  public:
   DumpParticleBin(MPM *, vector<string>);

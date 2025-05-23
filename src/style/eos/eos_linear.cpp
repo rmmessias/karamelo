@@ -68,12 +68,12 @@ double EOSLinear::K(){
   return K_;
 }
 
-void EOSLinear::compute_pressure(Solid &solid, Kokkos::View<double*> &pH) const
+void EOSLinear::compute_pressure(Solid &solid, Kokkos::View<double*,Kokkos::SharedSpace> &pH) const
 {
   double K_ = this->K_;
-  Kokkos::View<double*> sJ = solid.J;
-  Kokkos::View<double*> sdamage = solid.damage;
-  Kokkos::View<double*> sienergy = solid.ienergy;
+  Kokkos::View<double*,Kokkos::SharedSpace> sJ = solid.J;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
+  Kokkos::View<double*,Kokkos::SharedSpace> sienergy = solid.ienergy;
 
   Kokkos::parallel_for("EOSLinear::compute_pressure", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

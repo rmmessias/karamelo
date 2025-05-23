@@ -134,15 +134,15 @@ void FixCheckSolution::final_integrate(Solid &solid)
   double ntimestep = update->ntimestep;
   int nsteps = update->nsteps;
   bigint next = output->next;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<double*> vol0 = solid.vol0;
-  Kokkos::View<Vector3d*> x = solid.x;
-  Kokkos::View<Vector3d*> x0 = solid.x0;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> vol0 = solid.vol0;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x0 = solid.x0;
 
   for (int i = 0; i < 3; i++)
     if (u[i])
     {
-      Kokkos::View<double **> u_i = u[i]->registers;
+      Kokkos::View<double **,Kokkos::SharedSpace> u_i = u[i]->registers;
 
       Kokkos::parallel_reduce(
           "FixCheckSolution::final_integrate", solid.np_local,

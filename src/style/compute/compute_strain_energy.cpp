@@ -62,10 +62,10 @@ void ComputeStrainEnergy::compute_value(Solid &solid) {
 
   Es_reduced = 0;
 
-  Kokkos::View<Matrix3d*> sigma = solid.sigma;
-  Kokkos::View<Matrix3d*> strain_el = solid.strain_el;
-  Kokkos::View<double*> vol = solid.vol;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sigma = solid.sigma;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> strain_el = solid.strain_el;
+  Kokkos::View<double*,Kokkos::SharedSpace> vol = solid.vol;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

@@ -66,9 +66,9 @@ void ComputeMaxPlasticStrain::compute_value(Solid &solid) {
 
   double Epmax_reduced(0.), Tmax_reduced(0.), Epmax_tmp(0.), Tmax_tmp(0.);
 
-  Kokkos::View<double*> T = solid.T;
-  Kokkos::View<double*> eff_plastic_strain = solid.eff_plastic_strain;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> T = solid.T;
+  Kokkos::View<double*,Kokkos::SharedSpace> eff_plastic_strain = solid.eff_plastic_strain;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

@@ -59,14 +59,14 @@ TemperaturePlasticWork::TemperaturePlasticWork(MPM *mpm, vector<string> args) : 
 
 void
 TemperaturePlasticWork::compute_heat_source(Solid &solid,
-                                            Kokkos::View<Matrix3d*> &sigma_dev) const
+                                            Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev) const
 {
   double Tm = this->Tm;
   double chi = this->chi;
 
-  Kokkos::View<double*> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
-  Kokkos::View<double*> sgamma = solid.gamma;
-  Kokkos::View<double*> sT = solid.T;
+  Kokkos::View<double*,Kokkos::SharedSpace> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
+  Kokkos::View<double*,Kokkos::SharedSpace> sgamma = solid.gamma;
+  Kokkos::View<double*,Kokkos::SharedSpace> sT = solid.T;
 
   Kokkos::parallel_for("TemperaturePlasticWork::compute_heat_source", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

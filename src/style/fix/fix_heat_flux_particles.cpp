@@ -95,11 +95,11 @@ void FixHeatFluxParticles::initial_integrate(Solid &solid)
   // Go through all the particles in the group and set v_update to the right value:
 
   int groupbit = this->groupbit, dimension = domain->dimension;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<double*> T = solid.T, vol = solid.vol, gamma = solid.gamma;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> T = solid.T, vol = solid.vol, gamma = solid.gamma;
   double invcp = solid.mat->invcp;
 
-  Kokkos::View<double**> q_i = q->registers;
+  Kokkos::View<double**,Kokkos::SharedSpace> q_i = q->registers;
 
   Kokkos::parallel_reduce("FixVelocityNodes::post_update_grid_state", solid.np_local,
 			  KOKKOS_LAMBDA(const int &ip, double &lqtot)

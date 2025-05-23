@@ -98,9 +98,9 @@ DamageJohnsonCook::DamageJohnsonCook(MPM *mpm, vector<string> args)
 
 void
 DamageJohnsonCook::compute_damage(Solid &solid,
-                                  Kokkos::View<double*> &pH,
-                                  Kokkos::View<Matrix3d*> &sigma_dev,
-                                  Kokkos::View<double*> &plastic_strain_increment) const
+                                  Kokkos::View<double*,Kokkos::SharedSpace> &pH,
+                                  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev,
+                                  Kokkos::View<double*,Kokkos::SharedSpace> &plastic_strain_increment) const
 {
   double d1 = this->d1;
   double d2 = this->d2;
@@ -113,10 +113,10 @@ DamageJohnsonCook::compute_damage(Solid &solid,
 
   double cp = solid.mat->cp;
 
-  Kokkos::View<double*> sdamage = solid.damage;
-  Kokkos::View<double*> sdamage_init = solid.damage_init;
-  Kokkos::View<double*> sT = solid.T;
-  Kokkos::View<double*> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage_init = solid.damage_init;
+  Kokkos::View<double*,Kokkos::SharedSpace> sT = solid.T;
+  Kokkos::View<double*,Kokkos::SharedSpace> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
 
   Kokkos::parallel_for("DamageJohnsonCook::compute_damage", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

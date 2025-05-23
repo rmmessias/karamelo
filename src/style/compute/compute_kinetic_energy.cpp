@@ -70,9 +70,9 @@ void ComputeKineticEnergy::compute_value(Solid &solid) {
 
   Ek_reduced = 0;
 
-  Kokkos::View<Vector3d*> v = solid.v;
-  Kokkos::View<double*> mass = solid.mass;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> v = solid.v;
+  Kokkos::View<double*,Kokkos::SharedSpace> mass = solid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
 

@@ -78,10 +78,10 @@ void ComputeAngularMomentum::compute_value(Solid &solid) {
     J = Vector3d();
   }
 
-  Kokkos::View<Vector3d*> x = solid.x;
-  Kokkos::View<Vector3d*> v = solid.v;
-  Kokkos::View<double*> mass = solid.mass;
-  Kokkos::View<int*> mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> x = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> v = solid.v;
+  Kokkos::View<double*,Kokkos::SharedSpace> mass = solid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
 
   int groupbit = this->groupbit;
   Vector3d x0 = this->x0;

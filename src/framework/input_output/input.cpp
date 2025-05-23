@@ -532,7 +532,7 @@ Input::parsev(const string &name, double value)
         error->all(FLERR, name + " was not a literal expression.\n");
     }
 
-    expression.registers = Kokkos::View<double**>("expression", 1, 1);
+    expression.registers = Kokkos::View<double**,Kokkos::SharedSpace>("expression", 1, 1);
 
     return expression;
 }
@@ -736,7 +736,7 @@ Var Input::parsev(string str)
       if (!max_index)
         cout << "MAX INDEX CANNOT BE ZERO" << endl;
         
-      expression.registers = Kokkos::View<double**>("expression", max_index, 1);
+      expression.registers = Kokkos::View<double**,Kokkos::SharedSpace>("expression", max_index, 1);
     }
   }
 

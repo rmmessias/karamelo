@@ -94,11 +94,11 @@ void FixConvectionParticles::initial_integrate(Solid &solid) {
   Tinf->evaluate(*solid.input);
   double h = this->h;
   int groupbit = this->groupbit, dimension = domain->dimension;
-  Kokkos::View<int*> mask = solid.mask;
-  Kokkos::View<double*> T = solid.T, vol = solid.vol, gamma = solid.gamma;
+  Kokkos::View<int*,Kokkos::SharedSpace> mask = solid.mask;
+  Kokkos::View<double*,Kokkos::SharedSpace> T = solid.T, vol = solid.vol, gamma = solid.gamma;
   double invcp = solid.mat->invcp;
 
-  Kokkos::View<double**> Tinf_ = Tinf->registers;
+  Kokkos::View<double**,Kokkos::SharedSpace> Tinf_ = Tinf->registers;
 
   Kokkos::parallel_reduce("FixVelocityNodes::post_update_grid_state", solid.np_local,
 			  KOKKOS_LAMBDA(const int &ip, double &lqtot)

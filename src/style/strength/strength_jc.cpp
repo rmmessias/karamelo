@@ -99,8 +99,8 @@ double StrengthJohnsonCook::G() { return G_; }
   
 void
 StrengthJohnsonCook::update_deviatoric_stress(Solid &solid,
-                                              Kokkos::View<double*> &plastic_strain_increment,
-                                              Kokkos::View<Matrix3d*> &sigma_dev) const
+                                              Kokkos::View<double*,Kokkos::SharedSpace> &plastic_strain_increment,
+                                              Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev) const
 {
   double epsdot0 = this->epsdot0;
   double A = this->A;
@@ -117,12 +117,12 @@ StrengthJohnsonCook::update_deviatoric_stress(Solid &solid,
 
   double cp = solid.mat->cp;
 
-  Kokkos::View<Matrix3d*> ssigma = solid.sigma;
-  Kokkos::View<Matrix3d*> sD = solid.D;
-  Kokkos::View<double*> sdamage = solid.damage;
-  Kokkos::View<double*> seff_plastic_strain = solid.eff_plastic_strain;
-  Kokkos::View<double*> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
-  Kokkos::View<double*> sT = solid.T;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> ssigma = solid.sigma;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sD = solid.D;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
+  Kokkos::View<double*,Kokkos::SharedSpace> seff_plastic_strain = solid.eff_plastic_strain;
+  Kokkos::View<double*,Kokkos::SharedSpace> seff_plastic_strain_rate = solid.eff_plastic_strain_rate;
+  Kokkos::View<double*,Kokkos::SharedSpace> sT = solid.T;
 
   Kokkos::parallel_for("StrengthJohnsonCook::update_deviatoric_stress", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

@@ -24,7 +24,7 @@ class ExpressionOperation:
   public Expression::Operation
 {
   int index;
-  Kokkos::View<double **> registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> registers;
 
   bool
   isOperand() const override
@@ -55,7 +55,7 @@ public:
   apply(Expression *expression) override
   {
     int index = this->index = expression->index;
-    Kokkos::View<double **> registers = this->registers = expression->registers;
+    Kokkos::View<double **,Kokkos::SharedSpace> registers = this->registers = expression->registers;
     DERIVED derived(*static_cast<const DERIVED *>(this));
 
     Kokkos::parallel_for(__PRETTY_FUNCTION__, expression->registers.extent(1),

@@ -113,9 +113,9 @@ void Group::assign(vector<string> args)
 
     for (int isolid = 0; isolid < domain->solids.size(); isolid++)
     {
-      Kokkos::View<Vector3d*> *x;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> *x;
       int nmax;
-      Kokkos::View<int*> *mask;
+      Kokkos::View<int*,Kokkos::SharedSpace> *mask;
 
       if (pon[igroup] == "particles")
       {
@@ -132,10 +132,10 @@ void Group::assign(vector<string> args)
 
       int n = 0;
 
-      Kokkos::View<Vector3d*>::HostMirror x_mirror = create_mirror(*x);
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror x_mirror = create_mirror(*x);
       deep_copy(x_mirror, *x);
 
-      Kokkos::View<int*>::HostMirror mask_mirror = create_mirror(*mask);
+      Kokkos::View<int*,Kokkos::SharedSpace>::HostMirror mask_mirror = create_mirror(*mask);
       deep_copy(mask_mirror, *mask);
 
       // not parallelized on gpu for legacy reasons
@@ -167,9 +167,9 @@ void Group::assign(vector<string> args)
       if (solid[igroup] == -1)
         error->all(FLERR, "Error: cannot find solid with ID " + args[i] + ".\n");
 
-      Kokkos::View<Vector3d*> *x;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> *x;
       int nmax;
-      Kokkos::View<int*> *mask;
+      Kokkos::View<int*,Kokkos::SharedSpace> *mask;
 
       if (pon[igroup] == "particles")
       {
@@ -186,10 +186,10 @@ void Group::assign(vector<string> args)
 
       int n = 0;
 
-      Kokkos::View<Vector3d*>::HostMirror x_mirror = create_mirror(*x);
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace>::HostMirror x_mirror = create_mirror(*x);
       deep_copy(x_mirror, *x);
 
-      Kokkos::View<int*>::HostMirror mask_mirror = create_mirror(*mask);
+      Kokkos::View<int*,Kokkos::SharedSpace>::HostMirror mask_mirror = create_mirror(*mask);
       deep_copy(mask_mirror, *mask);
 
       for (int ip = 0; ip < nmax; ip++)
@@ -251,9 +251,9 @@ double Group::xcm(int igroup, int dir)
 
   for (Solid *solid: domain->solids) {
 
-    Kokkos::View<Vector3d*> x = solid->x;
-    Kokkos::View<double*> mass = solid->mass;
-    Kokkos::View<int*> mask   = solid->mask;
+    Kokkos::View<Vector3d*,Kokkos::SharedSpace> x = solid->x;
+    Kokkos::View<double*,Kokkos::SharedSpace> mass = solid->mass;
+    Kokkos::View<int*,Kokkos::SharedSpace> mask   = solid->mask;
 
     const int &nmax           = solid->np_local;
 
@@ -288,8 +288,8 @@ double Group::internal_force(int igroup, int dir)
 
   for (Solid *solid: domain->solids) {
 
-    Kokkos::View<Vector3d*> f = solid->f;
-    Kokkos::View<int*> mask   = solid->mask;
+    Kokkos::View<Vector3d*,Kokkos::SharedSpace> f = solid->f;
+    Kokkos::View<int*,Kokkos::SharedSpace> mask   = solid->mask;
 
     const int &nmax           = solid->np_local;
 
@@ -323,9 +323,9 @@ double Group::external_force(int igroup, int dir)
 
   for (Solid *solid: domain->solids) {
 
-    Kokkos::View<Vector3d*> mbp = solid->mbp;
-    Kokkos::View<double*> mass   = solid->mass;
-    Kokkos::View<int*> mask     = solid->mask;
+    Kokkos::View<Vector3d*,Kokkos::SharedSpace> mbp = solid->mbp;
+    Kokkos::View<double*,Kokkos::SharedSpace> mass   = solid->mass;
+    Kokkos::View<int*,Kokkos::SharedSpace> mask     = solid->mask;
 
     const int &nmax           = solid->np_local;
 
@@ -427,9 +427,9 @@ void Group::read_restart(ifstream *ifr) {
       // Consider all solids
       for (int isolid = 0; isolid < domain->solids.size(); isolid++) {
 
-        Kokkos::View<Vector3d*> *x;
+        Kokkos::View<Vector3d*,Kokkos::SharedSpace> *x;
         int nmax;
-        Kokkos::View<int*> *mask;
+        Kokkos::View<int*,Kokkos::SharedSpace> *mask;
 
         if (pon[igroup] == "particles") {
           x = &domain->solids[isolid]->x0;
@@ -469,9 +469,9 @@ void Group::read_restart(ifstream *ifr) {
 	}
       }
     } else {
-      Kokkos::View<Vector3d*> *x;
+      Kokkos::View<Vector3d*,Kokkos::SharedSpace> *x;
       int nmax;
-      Kokkos::View<int*> *mask;
+      Kokkos::View<int*,Kokkos::SharedSpace> *mask;
 
       if (pon[igroup] == "particles") {
         x = &domain->solids[solid[igroup]]->x0;

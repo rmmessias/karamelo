@@ -100,7 +100,7 @@ double EOSShock::K(){
 //double &pFinal, double &e, const double J, const double rho, const double damage, const Matrix3d D, const double cellsize, const double T
 
 
-void EOSShock::compute_pressure(Solid &solid, Kokkos::View<double*> &pH) const
+void EOSShock::compute_pressure(Solid &solid, Kokkos::View<double*,Kokkos::SharedSpace> &pH) const
 {
   double rho0_ = this->rho0_;
   double c0 = this->c0;
@@ -116,12 +116,12 @@ void EOSShock::compute_pressure(Solid &solid, Kokkos::View<double*> &pH) const
   double cp = solid.mat->cp;
   double cellsize = solid.grid->cellsize;
 
-  Kokkos::View<double*> srho = solid.rho;
-  Kokkos::View<double*> sJ = solid.J;
-  Kokkos::View<Matrix3d*> sD = solid.D;
-  Kokkos::View<double*> sT = solid.T;
-  Kokkos::View<double*> sdamage = solid.damage;
-  Kokkos::View<double*> sienergy = solid.ienergy;
+  Kokkos::View<double*,Kokkos::SharedSpace> srho = solid.rho;
+  Kokkos::View<double*,Kokkos::SharedSpace> sJ = solid.J;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sD = solid.D;
+  Kokkos::View<double*,Kokkos::SharedSpace> sT = solid.T;
+  Kokkos::View<double*,Kokkos::SharedSpace> sdamage = solid.damage;
+  Kokkos::View<double*,Kokkos::SharedSpace> sienergy = solid.ienergy;
 
   Kokkos::parallel_for("EOSShock::compute_pressure", solid.np_local,
   KOKKOS_LAMBDA (const int &ip)

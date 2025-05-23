@@ -512,9 +512,9 @@ void Domain::create_partition(vector<string> args) {
 
 
   int n[3] = {grid->nx, grid->ny, grid->nz};
-  Kokkos::View<Vector3i*>::HostMirror gntype = create_mirror(grid->ntype);
+  Kokkos::View<Vector3i*,Kokkos::SharedSpace>::HostMirror gntype = create_mirror(grid->ntype);
   deep_copy(gntype, grid->ntype);
-  Kokkos::View<int*>::HostMirror gmask = create_mirror(grid->mask);
+  Kokkos::View<int*,Kokkos::SharedSpace>::HostMirror gmask = create_mirror(grid->mask);
   deep_copy(gmask, grid->mask);
 
   // Kokkos::parallel_for(__PRETTY_FUNCTION__, Kokkos::MDRangePolicy<Kokkos::Rank<3>>(

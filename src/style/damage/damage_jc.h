@@ -34,9 +34,9 @@ public:
   void read_restart(ifstream *);
 
   void compute_damage(Solid &solid,
-                      Kokkos::View<double*> &pH,
-                      Kokkos::View<Matrix3d*> &sigma_dev,
-                      Kokkos::View<double*> &plastic_strain_increment) const override;
+                      Kokkos::View<double*,Kokkos::SharedSpace> &pH,
+                      Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev,
+                      Kokkos::View<double*,Kokkos::SharedSpace> &plastic_strain_increment) const override;
 
 protected:
   double d1, d2, d3, d4, d5, epsdot0, Tr, Tm, Tmr;

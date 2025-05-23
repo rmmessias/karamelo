@@ -4,13 +4,13 @@
 
 #include <solid.h>
 
-template <Kokkos::View<Vector3d *> Solid::*SOLID_TO_VECTOR,
-  Kokkos::View<Vector3d *> Grid::*GRID_TO_VECTOR,
+template <Kokkos::View<Vector3d *,Kokkos::SharedSpace> Solid::*SOLID_TO_VECTOR,
+  Kokkos::View<Vector3d *,Kokkos::SharedSpace> Grid::*GRID_TO_VECTOR,
   int N>
 class ExpressionOperandVector:
   public ExpressionOperand<ExpressionOperandVector<SOLID_TO_VECTOR, GRID_TO_VECTOR, N>>
 {
-  Kokkos::View<Vector3d*> vector;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> vector;
 
 public:
   void

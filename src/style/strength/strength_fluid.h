@@ -25,8 +25,8 @@ public:
   void read_restart(ifstream *);
 
   void update_deviatoric_stress(Solid &solid,
-                                Kokkos::View<double*> &plastic_strain_increment,
-                                Kokkos::View<Matrix3d*> &sigma_dev) const override;
+                                Kokkos::View<double*,Kokkos::SharedSpace> &plastic_strain_increment,
+                                Kokkos::View<Matrix3d*,Kokkos::SharedSpace> &sigma_dev) const override;
   
 protected:
   double G_;

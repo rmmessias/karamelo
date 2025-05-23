@@ -129,18 +129,18 @@ void FixIndentMinimizePenetration::initial_integrate(Solid &solid)
   vyvalue->evaluate(solid);
   vzvalue->evaluate(solid);
 
-  Kokkos::View<double **> xvalue_ = xvalue->registers;
-  Kokkos::View<double **> yvalue_ = yvalue->registers;
-  Kokkos::View<double **> zvalue_ = zvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> xvalue_ = xvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> yvalue_ = yvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> zvalue_ = zvalue->registers;
 
-  Kokkos::View<double **>::HostMirror xvalue_Host = create_mirror(xvalue->registers);
-  Kokkos::View<double **>::HostMirror yvalue_Host = create_mirror(yvalue->registers);
+  Kokkos::View<double **,Kokkos::SharedSpace>::HostMirror xvalue_Host = create_mirror(xvalue->registers);
+  Kokkos::View<double **,Kokkos::SharedSpace>::HostMirror yvalue_Host = create_mirror(yvalue->registers);
   deep_copy(xvalue_Host, xvalue->registers);
   deep_copy(yvalue_Host, yvalue->registers);
 
-  Kokkos::View<double **> vxvalue_ = vxvalue->registers;
-  Kokkos::View<double **> vyvalue_ = vyvalue->registers;
-  Kokkos::View<double **> vzvalue_ = vzvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> vxvalue_ = vxvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> vyvalue_ = vyvalue->registers;
+  Kokkos::View<double **,Kokkos::SharedSpace> vzvalue_ = vzvalue->registers;
 
   // Go through all the particles in the group and set b to the right value:
 
@@ -150,14 +150,14 @@ void FixIndentMinimizePenetration::initial_integrate(Solid &solid)
   int dimension = domain->dimension;
   bool axisymmetric = domain->axisymmetric;
 
-  Kokkos::View<double*>    mass = solid.mass;
-  Kokkos::View<int*>      mask = solid.mask;
-  Kokkos::View<Vector3d*>  sx  = solid.x;
-  Kokkos::View<Vector3d*>  sx0 = solid.x0;
-  Kokkos::View<Vector3d*>   sv = solid.v;
-  Kokkos::View<double*>    svol = update->method->is_TL ? solid.vol0 : solid.vol;
-  Kokkos::View<Vector3d*> smbp = solid.mbp;
-  Kokkos::View<Matrix3d*> sF = solid.F;
+  Kokkos::View<double*,Kokkos::SharedSpace>    mass = solid.mass;
+  Kokkos::View<int*,Kokkos::SharedSpace>      mask = solid.mask;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace>  sx  = solid.x;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace>  sx0 = solid.x0;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace>   sv = solid.v;
+  Kokkos::View<double*,Kokkos::SharedSpace>    svol = update->method->is_TL ? solid.vol0 : solid.vol;
+  Kokkos::View<Vector3d*,Kokkos::SharedSpace> smbp = solid.mbp;
+  Kokkos::View<Matrix3d*,Kokkos::SharedSpace> sF = solid.F;
 
   const double &cellsizeSq = solid.grid->cellsize * solid.grid->cellsize;
   double dt = update->dt;
